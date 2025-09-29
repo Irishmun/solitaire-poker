@@ -20,6 +20,7 @@ namespace SolitairePoker
         private Board _backGround;
 
         private SpriteFont _font;
+        private TextSprite _message;
         private int deckSize = 10;
         private int maxDeckHeight = 10;
 
@@ -44,12 +45,16 @@ namespace SolitairePoker
 
         protected override void LoadContent()
         {
+            _font = Content.Load<SpriteFont>("Font");
+            _message = new TextSprite(_font, true, new Vector2(2, 2));
+            _message.Alpha = 4;
             // TODO: use this.Content to load your game content here
+
             //_deck.LoadDeckIntoMemory(Content, "Decks/Bicycle/Bicycle.dck");
             _deck.LoadDeckIntoMemory(Content, "Decks/Kenney/Kenney.dck");
-            _font = Content.Load<SpriteFont>("Font");
             _backGround.LoadBoard();
 
+            _message.Text = $"Loaded Deck \"{_deck.LoadedDeckName}\"...";
 
             base.LoadContent();
         }
@@ -72,6 +77,10 @@ namespace SolitairePoker
                 _cHeld = false;
             }
             _cHeld = Keyboard.GetState().IsKeyDown(Keys.C);
+            if (gameTime.ElapsedGameTime.Milliseconds > 0)
+            {
+                _message.Alpha -= (float)gameTime.ElapsedGameTime.TotalSeconds*2f;
+            }
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -89,8 +98,8 @@ namespace SolitairePoker
             SpriteBatch.Begin(SpriteSortMode.FrontToBack, samplerState: SamplerState.PointWrap);
             _backGround.DrawBoard(SpriteBatch);
 
-            SpriteBatch.DrawString(_font,$"Loaded Deck \"{_deck.LoadedDeckName}\"...",Vector2.Zero,Color.White);
-            SpriteBatch.DrawString(_font,$"Loaded Deck \"{_deck.LoadedDeckName}\"...",Vector2.One,Color.Black);
+
+            _message.Draw(SpriteBatch, new Vector2(8, 4));
             // TODO: Add your drawing code here
 
             //spread out cards
