@@ -51,7 +51,8 @@ namespace SolitairePoker
             // TODO: use this.Content to load your game content here
 
             //_deck.LoadDeckIntoMemory(Content, "Decks/Bicycle/Bicycle.dck");
-            _deck.LoadDeckIntoMemory(Content, "Decks/Kenney/Kenney.dck");
+            //_deck.LoadDeckIntoMemory(Content, "Decks/Kenney/Kenney.dck");
+            _deck.LoadDeckIntoMemory(Content, "Decks/TF2/tf2.dck");
             _backGround.LoadBoard();
 
             _message.Text = $"Loaded Deck \"{_deck.LoadedDeckName}\"...";
@@ -79,7 +80,7 @@ namespace SolitairePoker
             _cHeld = Keyboard.GetState().IsKeyDown(Keys.C);
             if (gameTime.ElapsedGameTime.Milliseconds > 0)
             {
-                _message.Alpha -= (float)gameTime.ElapsedGameTime.TotalSeconds*2f;
+                _message.Alpha -= (float)gameTime.ElapsedGameTime.TotalSeconds * 2f;
             }
             // TODO: Add your update logic here
 
@@ -128,7 +129,7 @@ namespace SolitairePoker
                     col = Color.Gray;
                 }
                 alt = !alt;
-                _deck.CardBackTex.Draw(SpriteBatch, pos, col, 0, Vector2.Zero, 2, SpriteEffects.None, 1f - (((float)height - i) / (float)height));
+                _deck.CardBackTex.Draw(SpriteBatch, pos, col, 0, Vector2.Zero, _deck.BackScale, SpriteEffects.None, 1f - (((float)height - i) / (float)height));
                 pos.Y--;
             }
 

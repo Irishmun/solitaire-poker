@@ -16,36 +16,43 @@ namespace SolitairePoker.Poker
     internal class DeckLoader
     {
         //pokernight cards have .75 width
-        private readonly Vector2 AssumedCardSize = new Vector2(42,60);
+        private readonly Vector2 DesiredCardSize = new Vector2(84, 120);
         private string _loadedDeckName = "no deck";
         private string _cardBack;
         private TextureRegion _cardBackTex;
         private Vector2 _origin = new Vector2(-1);//top-left corner of the card
         private Vector2 _size = Vector2.Zero;//size of the texture to be used
-        private Vector2 _scale = Vector2.One;//how to apply scale before any other scale should be applied
+        private Vector2 _cardScale = Vector2.One;//how to apply scale on the cards before any other scale should be applied
+        private Vector2 _backScale = Vector2.One;//how to apply scale on the cardback before any other scale should be applied
         private Card[] _loadedCards;
 
         public void LoadDeckIntoMemory(ContentManager content, string deckFile)
         {
             Card[] cards = GetCardNames(deckFile, content.RootDirectory);
 
-            Texture2D tex;
-
             for (int i = 0; i < cards.Length; i++)
             {
                 cards[i].Texture = LoadTexture(cards[i].FileName);
             }
 
-            _cardBackTex = LoadTexture(_cardBack);
+            _cardBackTex = LoadTexture(_cardBack, false);
 
             _loadedCards = cards;
             System.Diagnostics.Debug.WriteLine($"Loaded deck \"{_loadedDeckName}\"...");
 
-            TextureRegion LoadTexture(string name)
+            TextureRegion LoadTexture(string name, bool scaleFront = true)
             {
-                tex = content.Load<Texture2D>(name);
-                _origin = _origin.X < 0 ? new Vector2(tex.Width * 0.5f, tex.Height * 0.5f):_origin;
+                Texture2D tex = content.Load<Texture2D>(name);
+                _origin = _origin.X < 0 ? Vector2.Zero : _origin;
                 _size = _size == Vector2.Zero ? new Vector2(tex.Width, tex.Height) : _size;
+                if (scaleFront)
+                {
+                    _cardScale = new Vector2(DesiredCardSize.X / _size.X, DesiredCardSize.Y / _size.Y);
+                }
+                else
+                {
+                    _backScale = new Vector2(DesiredCardSize.X / _size.X, DesiredCardSize.Y / _size.Y);
+                }
                 return new TextureRegion(tex, (int)_origin.X, (int)_origin.Y, (int)_size.X, (int)_size.Y);
             }
         }
@@ -87,18 +94,6 @@ namespace SolitairePoker.Poker
                                     {
                                         _origin = new Vector2(originVecX, originVecY);
                                         Debug.WriteLine($"card origin: {_origin}");
-                                    }
-                                    else
-                                    {
-                                        Debug.WriteLine($"Failed to parse origin vector {cardKey[1]}");
-                                    }
-                                    break;
-                                case 'z':
-                                    string[] zoomVec = cardKey[1].Split(',');
-                                    if (zoomVec.Length >= 2 && float.TryParse(zoomVec[0], out float zoomVecX) && float.TryParse(zoomVec[1], out float zoomVecY))
-                                    {
-                                        _origin = new Vector2(zoomVecX, zoomVecY);
-                                        Debug.WriteLine($"card zoom: {_origin}");
                                     }
                                     else
                                     {
@@ -185,5 +180,7 @@ namespace SolitairePoker.Poker
         public string LoadedDeckName { get => _loadedDeckName; set => _loadedDeckName = value; }
         public TextureRegion CardBackTex { get => _cardBackTex; set => _cardBackTex = value; }
         public Card[] LoadedCards { get => _loadedCards; set => _loadedCards = value; }
+        public Vector2 CardScale => _cardScale;
+        public Vector2 BackScale => _backScale;
     }
 }
