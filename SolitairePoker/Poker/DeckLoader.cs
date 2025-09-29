@@ -19,42 +19,59 @@ namespace SolitairePoker.Poker
         private readonly Vector2 DesiredCardSize = new Vector2(84, 120);
         private string _loadedDeckName = "no deck";
         private string _cardBack;
-        private TextureRegion _cardBackTex;
+        private Sprite _cardBackTex;
         private Vector2 _origin = new Vector2(-1);//top-left corner of the card
         private Vector2 _size = Vector2.Zero;//size of the texture to be used
-        private Vector2 _cardScale = Vector2.One;//how to apply scale on the cards before any other scale should be applied
-        private Vector2 _backScale = Vector2.One;//how to apply scale on the cardback before any other scale should be applied
         private Card[] _loadedCards;
 
-        public void LoadDeckIntoMemory(ContentManager content, string deckFile)
+        public bool LoadDeckIntoMemory(ContentManager content, string deckFile)
         {
-            Card[] cards = GetCardNames(deckFile, content.RootDirectory);
+            Card[] cards;
+            try
+            {
+                cards = GetCardNames(deckFile, content.RootDirectory);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("Failed to get card names: " + e.Message);
+                return false;
+            }
 
             for (int i = 0; i < cards.Length; i++)
             {
-                cards[i].Texture = LoadTexture(cards[i].FileName);
+                try
+                {
+                    cards[i].Sprite = LoadTexture(cards[i].FileName);
+                }
+                catch (Exception e)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to create card sprite for card {cards[i].FileName}: " + e.Message);
+                    return false;
+                }
             }
 
-            _cardBackTex = LoadTexture(_cardBack, false);
+            try
+            {
+                _cardBackTex = LoadTexture(_cardBack);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to create card sprite for card back: " + e.Message);
+                return false;
+            }
 
             _loadedCards = cards;
-            System.Diagnostics.Debug.WriteLine($"Loaded deck \"{_loadedDeckName}\"...");
 
-            TextureRegion LoadTexture(string name, bool scaleFront = true)
+            Sprite LoadTexture(string name)
             {
                 Texture2D tex = content.Load<Texture2D>(name);
                 _origin = _origin.X < 0 ? Vector2.Zero : _origin;
                 _size = _size == Vector2.Zero ? new Vector2(tex.Width, tex.Height) : _size;
-                if (scaleFront)
-                {
-                    _cardScale = new Vector2(DesiredCardSize.X / _size.X, DesiredCardSize.Y / _size.Y);
-                }
-                else
-                {
-                    _backScale = new Vector2(DesiredCardSize.X / _size.X, DesiredCardSize.Y / _size.Y);
-                }
-                return new TextureRegion(tex, (int)_origin.X, (int)_origin.Y, (int)_size.X, (int)_size.Y);
+                Sprite spr = new Sprite(new TextureRegion(tex, (int)_origin.X, (int)_origin.Y, (int)_size.X, (int)_size.Y));
+                spr.Scale = new Vector2(DesiredCardSize.X / _size.X, DesiredCardSize.Y / _size.Y);
+                return spr;
             }
+            return true;
         }
 
         private Card[] GetCardNames(string deckFile, string rootDir = "Content")
@@ -178,9 +195,7 @@ namespace SolitairePoker.Poker
         }
 
         public string LoadedDeckName { get => _loadedDeckName; set => _loadedDeckName = value; }
-        public TextureRegion CardBackTex { get => _cardBackTex; set => _cardBackTex = value; }
+        public Sprite CardBackTex { get => _cardBackTex; set => _cardBackTex = value; }
         public Card[] LoadedCards { get => _loadedCards; set => _loadedCards = value; }
-        public Vector2 CardScale => _cardScale;
-        public Vector2 BackScale => _backScale;
     }
 }

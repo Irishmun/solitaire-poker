@@ -21,7 +21,7 @@ namespace SolitairePoker
 
         private SpriteFont _font;
         private TextSprite _message;
-        private int deckSize = 10;
+        private int deckSize = 52;//TODO: place this in a logic zone instead
         private int maxDeckHeight = 10;
 
 
@@ -50,12 +50,14 @@ namespace SolitairePoker
             _message.Alpha = 4;
             // TODO: use this.Content to load your game content here
 
-            //_deck.LoadDeckIntoMemory(Content, "Decks/Bicycle/Bicycle.dck");
-            //_deck.LoadDeckIntoMemory(Content, "Decks/Kenney/Kenney.dck");
-            _deck.LoadDeckIntoMemory(Content, "Decks/TF2/tf2.dck");
+            //if (_deck.LoadDeckIntoMemory(Content, "Decks/Bicycle/Bicycle.dck"))
+            if (_deck.LoadDeckIntoMemory(Content, "Decks/Kenney/Kenney.dck"))
+            //if (_deck.LoadDeckIntoMemory(Content, "Decks/TF2/tf2.dck"))
+            {
+                System.Diagnostics.Debug.WriteLine($"Loaded deck \"{_deck.LoadedDeckName}\"...");
+                _message.Text = $"Loaded Deck \"{_deck.LoadedDeckName}\"...";
+            }
             _backGround.LoadBoard();
-
-            _message.Text = $"Loaded Deck \"{_deck.LoadedDeckName}\"...";
 
             base.LoadContent();
         }
@@ -85,7 +87,6 @@ namespace SolitairePoker
             // TODO: Add your update logic here
 
             base.Update(gameTime);
-
         }
 
         protected override void Draw(GameTime gameTime)
@@ -129,7 +130,9 @@ namespace SolitairePoker
                     col = Color.Gray;
                 }
                 alt = !alt;
-                _deck.CardBackTex.Draw(SpriteBatch, pos, col, 0, Vector2.Zero, _deck.BackScale, SpriteEffects.None, 1f - (((float)height - i) / (float)height));
+                _deck.CardBackTex.Color = col;
+                _deck.CardBackTex.LayerDepth = 1f - (((float)height - i) / (float)height);
+                _deck.CardBackTex.Draw(SpriteBatch, pos);
                 pos.Y--;
             }
 

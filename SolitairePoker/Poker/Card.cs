@@ -13,11 +13,11 @@ namespace SolitairePoker.Poker
         private string fileName;
         private SuitEnum suit;
         private FaceEnum face;
-        private TextureRegion textureRegion;
+        private Sprite sprite;
 
         public string FileName { get => fileName; set => fileName = value; }
         public SuitEnum Suit { get => suit; set => suit = value; }
         public FaceEnum Face { get => face; set => face = value; }
-        public TextureRegion Texture { get => textureRegion; set => textureRegion = value; }
+        public Sprite Sprite { get => sprite; set => sprite = value; }
     }
 }
