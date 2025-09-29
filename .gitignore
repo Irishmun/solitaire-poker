@@ -416,3 +416,5 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+/SolitairePoker/Content/Decks/Kenney Archive
+/SolitairePoker/.vscode

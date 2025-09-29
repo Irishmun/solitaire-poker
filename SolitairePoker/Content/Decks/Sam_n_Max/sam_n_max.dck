@@ -1,0 +1,59 @@
+sa: card_sm_as
+s2: card_sm_2s
+s3: card_sm_3s
+s4: card_sm_4s
+s5: card_sm_5s
+s6: card_sm_6s
+s7: card_sm_7s
+s8: card_sm_8s
+s9: card_sm_9s
+s0: card_sm_10s
+sj: card_sm_js
+sq: card_sm_qs
+sk: card_sm_ks
+
+ca: card_sm_ac
+c2: card_sm_2c
+c3: card_sm_3c
+c4: card_sm_4c
+c5: card_sm_5c
+c6: card_sm_6c
+c7: card_sm_7c
+c8: card_sm_8c
+c9: card_sm_9c
+c0: card_sm_10c
+cj: card_sm_jc
+cq: card_sm_qc
+ck: card_sm_kc
+
+ha: card_sm_ah
+h2: card_sm_2h
+h3: card_sm_3h
+h4: card_sm_4h
+h5: card_sm_5h
+h6: card_sm_6h
+h7: card_sm_7h
+h8: card_sm_8h
+h9: card_sm_9h
+h0: card_sm_10h
+hj: card_sm_jh
+hq: card_sm_qh
+hk: card_sm_kh
+
+da: card_sm_ad
+d2: card_sm_2d
+d3: card_sm_3d
+d4: card_sm_4d
+d5: card_sm_5d
+d6: card_sm_6d
+d7: card_sm_7d
+d8: card_sm_8d
+d9: card_sm_9d
+d0: card_sm_10d
+dj: card_sm_jd
+dq: card_sm_qd
+dk: card_sm_kd
+
+b: card_sm_back
+n: Sam & Max
+z: 1,0.75

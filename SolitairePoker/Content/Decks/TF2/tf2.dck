@@ -1,0 +1,59 @@
+sa: card_tf2_as
+s2: card_tf2_2s
+s3: card_tf2_3s
+s4: card_tf2_4s
+s5: card_tf2_5s
+s6: card_tf2_6s
+s7: card_tf2_7s
+s8: card_tf2_8s
+s9: card_tf2_9s
+s0: card_tf2_10s
+sj: card_tf2_js
+sq: card_tf2_qs
+sk: card_tf2_ks
+
+ca: card_tf2_ac
+c2: card_tf2_2c
+c3: card_tf2_3c
+c4: card_tf2_4c
+c5: card_tf2_5c
+c6: card_tf2_6c
+c7: card_tf2_7c
+c8: card_tf2_8c
+c9: card_tf2_9c
+c0: card_tf2_10c
+cj: card_tf2_jc
+cq: card_tf2_qc
+ck: card_tf2_kc
+
+ha: card_tf2_ah
+h2: card_tf2_2h
+h3: card_tf2_3h
+h4: card_tf2_4h
+h5: card_tf2_5h
+h6: card_tf2_6h
+h7: card_tf2_7h
+h8: card_tf2_8h
+h9: card_tf2_9h
+h0: card_tf2_10h
+hj: card_tf2_jh
+hq: card_tf2_qh
+hk: card_tf2_kh
+
+da: card_tf2_ad
+d2: card_tf2_2d
+d3: card_tf2_3d
+d4: card_tf2_4d
+d5: card_tf2_5d
+d6: card_tf2_6d
+d7: card_tf2_7d
+d8: card_tf2_8d
+d9: card_tf2_9d
+d0: card_tf2_10d
+dj: card_tf2_jd
+dq: card_tf2_qd
+dk: card_tf2_kd
+
+b: card_tf2_back
+n: Team Fortress 2
+z: 1,0.75

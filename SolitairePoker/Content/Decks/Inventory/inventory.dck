@@ -1,0 +1,59 @@
+sa: card_inventory_as
+s2: card_inventory_2s
+s3: card_inventory_3s
+s4: card_inventory_4s
+s5: card_inventory_5s
+s6: card_inventory_6s
+s7: card_inventory_7s
+s8: card_inventory_8s
+s9: card_inventory_9s
+s0: card_inventory_10s
+sj: card_inventory_js
+sq: card_inventory_qs
+sk: card_inventory_ks
+
+ca: card_inventory_ac
+c2: card_inventory_2c
+c3: card_inventory_3c
+c4: card_inventory_4c
+c5: card_inventory_5c
+c6: card_inventory_6c
+c7: card_inventory_7c
+c8: card_inventory_8c
+c9: card_inventory_9c
+c0: card_inventory_10c
+cj: card_inventory_jc
+cq: card_inventory_qc
+ck: card_inventory_kc
+
+ha: card_inventory_ah
+h2: card_inventory_2h
+h3: card_inventory_3h
+h4: card_inventory_4h
+h5: card_inventory_5h
+h6: card_inventory_6h
+h7: card_inventory_7h
+h8: card_inventory_8h
+h9: card_inventory_9h
+h0: card_inventory_10h
+hj: card_inventory_jh
+hq: card_inventory_qh
+hk: card_inventory_kh
+
+da: card_inventory_ad
+d2: card_inventory_2d
+d3: card_inventory_3d
+d4: card_inventory_4d
+d5: card_inventory_5d
+d6: card_inventory_6d
+d7: card_inventory_7d
+d8: card_inventory_8d
+d9: card_inventory_9d
+d0: card_inventory_10d
+dj: card_inventory_jd
+dq: card_inventory_qd
+dk: card_inventory_kd
+
+b: card_inventory_back
+n: The Inventory
+z: 1,0.75
