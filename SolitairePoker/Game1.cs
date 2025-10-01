@@ -50,9 +50,9 @@ namespace SolitairePoker
             _message.Alpha = 4;
             // TODO: use this.Content to load your game content here
 
-            //if (_deck.LoadDeckIntoMemory(Content, "Decks/Bicycle/Bicycle.dck",out _deck))
-            if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/Kenney/Kenney.dck", out _deck))
-            //if (_deck.LoadDeckIntoMemory(Content, "Decks/TF2/tf2.dck",out _deck))
+            if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/Bicycle/Bicycle.dck",out _deck))
+            //if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/Kenney/Kenney.dck", out _deck))
+            //if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/TF2/tf2.dck",out _deck))
             {
                 System.Diagnostics.Debug.WriteLine($"Loaded deck \"{_deckLoader.LoadedDeckName}\"...");
                 _message.Text = $"Loaded Deck \"{_deckLoader.LoadedDeckName}\"...";

@@ -123,7 +123,37 @@ namespace SolitairePoker.Poker
                 return;
             }
 
-            _hand[0].Sprite.Draw(spriteBatch, handFieldCenter);
+            switch (_hand.Count)
+            {
+                case 1:
+                    _hand[0].Sprite.Draw(spriteBatch, handFieldCenter);
+                    break;
+                case 2:
+                    _hand[0].Sprite.Draw(spriteBatch, handFieldCenter - new Vector2(_hand[0].Sprite.Width * 0.5f + 4, 0));
+                    _hand[1].Sprite.Draw(spriteBatch, handFieldCenter + new Vector2(_hand[1].Sprite.Width * 0.5f + 4, 0));
+                    break;
+                case 3:
+                    _hand[0].Sprite.Draw(spriteBatch, handFieldCenter - new Vector2(_hand[0].Sprite.Width + 8, 0));
+                    _hand[1].Sprite.Draw(spriteBatch, handFieldCenter);
+                    _hand[2].Sprite.Draw(spriteBatch, handFieldCenter + new Vector2(_hand[2].Sprite.Width + 8, 0));
+                    break;
+                case 4:
+                    _hand[0].Sprite.Draw(spriteBatch, handFieldCenter - new Vector2(_hand[0].Sprite.Width * 1.5f + 4, 0));
+                    _hand[1].Sprite.Draw(spriteBatch, handFieldCenter - new Vector2(_hand[1].Sprite.Width * 0.5f + 2, 0));
+                    _hand[2].Sprite.Draw(spriteBatch, handFieldCenter + new Vector2(_hand[2].Sprite.Width * 0.5f + 2, 0));
+                    _hand[3].Sprite.Draw(spriteBatch, handFieldCenter + new Vector2(_hand[3].Sprite.Width * 1.5f + 4, 0));
+                    break;
+                case 5:
+                    _hand[0].Sprite.Draw(spriteBatch, handFieldCenter - new Vector2(_hand[0].Sprite.Width * 2 + 8, 0));
+                    _hand[1].Sprite.Draw(spriteBatch, handFieldCenter - new Vector2(_hand[2].Sprite.Width + 4, 0));
+                    _hand[2].Sprite.Draw(spriteBatch, handFieldCenter);
+                    _hand[3].Sprite.Draw(spriteBatch, handFieldCenter + new Vector2(_hand[3].Sprite.Width + 4, 0));
+                    _hand[4].Sprite.Draw(spriteBatch, handFieldCenter + new Vector2(_hand[4].Sprite.Width * 2 + 8, 0));
+                    break;
+                default:
+                    break;
+            }
+
             for (int i = 0; i < _hand.Count; i++)
             {
 
