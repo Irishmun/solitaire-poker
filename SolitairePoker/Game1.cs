@@ -16,13 +16,13 @@ namespace SolitairePoker
 
         private int cardIndex = 0;
 
-        private DeckLoader _deck;
+        private DeckLoader _deckLoader;
+        private CardDeck _deck;
         private Board _backGround;
 
         private SpriteFont _font;
         private TextSprite _message;
-        private int deckSize = 52;//TODO: place this in a logic zone instead
-        private int maxDeckHeight = 10;
+
 
 
         public Game1() : base("Solitaire Poker", 640, 480, false)
@@ -38,7 +38,7 @@ namespace SolitairePoker
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            _deck = new DeckLoader();
+            _deckLoader = new DeckLoader();
             _backGround = new Board();
             base.Initialize();
         }
@@ -50,12 +50,14 @@ namespace SolitairePoker
             _message.Alpha = 4;
             // TODO: use this.Content to load your game content here
 
-            //if (_deck.LoadDeckIntoMemory(Content, "Decks/Bicycle/Bicycle.dck"))
-            if (_deck.LoadDeckIntoMemory(Content, "Decks/Kenney/Kenney.dck"))
-            //if (_deck.LoadDeckIntoMemory(Content, "Decks/TF2/tf2.dck"))
+            //if (_deck.LoadDeckIntoMemory(Content, "Decks/Bicycle/Bicycle.dck",out _deck))
+            if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/Kenney/Kenney.dck", out _deck))
+            //if (_deck.LoadDeckIntoMemory(Content, "Decks/TF2/tf2.dck",out _deck))
             {
-                System.Diagnostics.Debug.WriteLine($"Loaded deck \"{_deck.LoadedDeckName}\"...");
-                _message.Text = $"Loaded Deck \"{_deck.LoadedDeckName}\"...";
+                System.Diagnostics.Debug.WriteLine($"Loaded deck \"{_deckLoader.LoadedDeckName}\"...");
+                _message.Text = $"Loaded Deck \"{_deckLoader.LoadedDeckName}\"...";
+                _deck.ShuffleDeck();
+                _deck.AddCardsToHand(_deck.PickupCards(5));
             }
             _backGround.LoadBoard();
 
@@ -70,13 +72,8 @@ namespace SolitairePoker
 
             if (Keyboard.GetState().IsKeyUp(Keys.C) && _cHeld == true)
             {
-                //Debug.WriteLine("Toggling ClearScreen to: " + !_clearScreen);
-                //_clearScreen = !_clearScreen;
-                if (deckSize == 0)
-                {
-                    return;
-                }
-                deckSize -= 1;
+                Debug.WriteLine("Toggling ClearScreen to: " + !_clearScreen);
+                _clearScreen = !_clearScreen;
                 _cHeld = false;
             }
             _cHeld = Keyboard.GetState().IsKeyDown(Keys.C);
@@ -98,57 +95,11 @@ namespace SolitairePoker
             }
 
             SpriteBatch.Begin(SpriteSortMode.FrontToBack, samplerState: SamplerState.PointWrap);
-            _backGround.DrawBoard(SpriteBatch);
-
-
-            _message.Draw(SpriteBatch, new Vector2(8, 4));
             // TODO: Add your drawing code here
-
-            //spread out cards
-            //Vector2 pos = Vector2.Zero;
-            //for (int i = 0; i < _deck.LoadedCards.Length; i++)
-            //{
-            //    if (pos.X + _deck.LoadedCards[i].Texture.Width > Graphics.PreferredBackBufferWidth)
-            //    {
-            //        pos.X = 0;
-            //        pos.Y += _deck.LoadedCards[i].Texture.Height;
-            //    }
-            //    _deck.LoadedCards[i].Texture.Draw(SpriteBatch, pos);
-            //
-            //    pos.X += _deck.LoadedCards[i].Texture.Width;
-            //}
-            //_deck.CardBackTex.Draw(SpriteBatch, pos);
-
-            Vector2 pos = _backGround.DeckFieldPos;
-            int height = deckSize > maxDeckHeight ? maxDeckHeight : deckSize;
-            bool alt = height % 2 == 0;
-            for (int i = 0; i < height; i++)
-            {
-                Color col = Color.White;
-                if (alt)
-                {
-                    col = Color.Gray;
-                }
-                alt = !alt;
-                _deck.CardBackTex.Color = col;
-                _deck.CardBackTex.LayerDepth = 1f - (((float)height - i) / (float)height);
-                _deck.CardBackTex.Draw(SpriteBatch, pos);
-                pos.Y--;
-            }
-
-            //cycle through cards
-            //Texture2D toDraw;
-            //if (cardIndex >= _deck.LoadedCards.Length)
-            //{
-            //    toDraw = _deck.CardBackTex;
-            //    cardIndex = 0;
-            //}
-            //else
-            //{
-            //    toDraw = _deck.LoadedCards[cardIndex].Texture;
-            //}
-            //SpriteBatch.Draw(toDraw, new Vector2((Graphics.PreferredBackBufferWidth - 64) * 0.5f, (Graphics.PreferredBackBufferHeight - 64)) * 0.5f, Color.White);
-            //cardIndex += 1;
+            _backGround.DrawBoard(SpriteBatch);
+            _message.Draw(SpriteBatch, new Vector2(8, 4));
+            _deck.DrawDeck(SpriteBatch, _backGround.DeckFieldPos);
+            _deck.DrawHand(SpriteBatch, _backGround.HandFieldCenter);
 
             SpriteBatch.End();
             base.Draw(gameTime);

@@ -12,6 +12,7 @@ namespace SolitairePoker.Background
         private TextureRegion _boardTex;
         private Vector2 _deckFieldPos;
         private Vector2 _handFieldPos;
+        private Vector2 _handFieldCenter;
 
 
         public void LoadBoard()
@@ -21,6 +22,7 @@ namespace SolitairePoker.Background
             //_deckFieldPos = new Vector2(561, 364);
             _handFieldPos = new Vector2(28, 332);
             //_handFieldPos = new Vector2(60, 364);
+            _handFieldCenter = new Vector2(253, 391);
         }
 
         public void DrawBoard(SpriteBatch batch)
@@ -29,6 +31,6 @@ namespace SolitairePoker.Background
         }
         public Vector2 DeckFieldPos { get => _deckFieldPos; set => _deckFieldPos = value; }
         public Vector2 HandFieldPos { get => _handFieldPos; set => _handFieldPos = value; }
-
+        public Vector2 HandFieldCenter { get => _handFieldCenter; set => _handFieldCenter = value; }
     }
 }

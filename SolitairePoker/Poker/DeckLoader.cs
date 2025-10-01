@@ -19,13 +19,13 @@ namespace SolitairePoker.Poker
         private readonly Vector2 DesiredCardSize = new Vector2(84, 120);
         private string _loadedDeckName = "no deck";
         private string _cardBack;
-        private Sprite _cardBackTex;
+        private Sprite _cardBackSprite;
         private Vector2 _origin = new Vector2(-1);//top-left corner of the card
         private Vector2 _size = Vector2.Zero;//size of the texture to be used
-        private Card[] _loadedCards;
 
-        public bool LoadDeckIntoMemory(ContentManager content, string deckFile)
+        public bool LoadDeckIntoMemory(ContentManager content, string deckFile, out CardDeck deck)
         {
+            deck = new CardDeck();
             Card[] cards;
             try
             {
@@ -42,6 +42,7 @@ namespace SolitairePoker.Poker
                 try
                 {
                     cards[i].Sprite = LoadTexture(cards[i].FileName);
+                    cards[i].Sprite.CenterOrigin();
                 }
                 catch (Exception e)
                 {
@@ -52,7 +53,7 @@ namespace SolitairePoker.Poker
 
             try
             {
-                _cardBackTex = LoadTexture(_cardBack);
+                _cardBackSprite = LoadTexture(_cardBack);
             }
             catch (Exception e)
             {
@@ -60,7 +61,7 @@ namespace SolitairePoker.Poker
                 return false;
             }
 
-            _loadedCards = cards;
+            deck.SetDeck(cards,_cardBackSprite);
 
             Sprite LoadTexture(string name)
             {
@@ -195,7 +196,6 @@ namespace SolitairePoker.Poker
         }
 
         public string LoadedDeckName { get => _loadedDeckName; set => _loadedDeckName = value; }
-        public Sprite CardBackTex { get => _cardBackTex; set => _cardBackTex = value; }
-        public Card[] LoadedCards { get => _loadedCards; set => _loadedCards = value; }
+        public Sprite CardBackTex { get => _cardBackSprite; set => _cardBackSprite = value; }
     }
 }
