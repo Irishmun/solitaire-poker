@@ -18,6 +18,8 @@ namespace MonoGameLibrary.Graphics
         /// </remarks>
         public Color Color { get; set; } = Color.White;
 
+        public Vector2 Position { get; set; } = Vector2.Zero;
+
         /// <summary>
         /// Gets or Sets the amount of rotation, in radians, to apply when rendering this sprite.
         /// </summary>
@@ -74,6 +76,8 @@ namespace MonoGameLibrary.Graphics
         /// </remarks>
         public float Height => Region.Height * Scale.Y;
 
+
+
         /// <summary>
         /// Creates a new sprite.
         /// </summary>
@@ -104,6 +108,17 @@ namespace MonoGameLibrary.Graphics
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
             Region.Draw(spriteBatch, position, Color, Rotation, Origin, Scale, Effects, LayerDepth);
+        }
+
+        public bool ContainsPoint(Point pos)
+        {
+            //adjust position to account for sprite origin offset
+            Point position = pos - Position.ToPoint();
+            if (Origin != Vector2.Zero)
+            {
+                position += new Point((int)(Region.Width * 0.5f), (int)(Region.Height * 0.5f));
+            }
+            return Region.Texture.Bounds.Contains(position);
         }
     }
 }

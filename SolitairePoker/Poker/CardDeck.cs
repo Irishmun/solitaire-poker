@@ -126,29 +126,44 @@ namespace SolitairePoker.Poker
             switch (_hand.Count)
             {
                 case 1:
-                    _hand[0].Sprite.Draw(spriteBatch, handFieldCenter);
+                    _hand[0].Sprite.Position = handFieldCenter;
+                    _hand[0].Sprite.Draw(spriteBatch, _hand[0].Sprite.Position);
                     break;
                 case 2:
-                    _hand[0].Sprite.Draw(spriteBatch, handFieldCenter - new Vector2(_hand[0].Sprite.Width * 0.5f + 4, 0));
-                    _hand[1].Sprite.Draw(spriteBatch, handFieldCenter + new Vector2(_hand[1].Sprite.Width * 0.5f + 4, 0));
+                    _hand[0].Sprite.Position = handFieldCenter - new Vector2(_hand[0].Sprite.Width * 0.5f + 4, 0);
+                    _hand[1].Sprite.Position = handFieldCenter + new Vector2(_hand[1].Sprite.Width * 0.5f + 4, 0);
+                    _hand[0].Sprite.Draw(spriteBatch, _hand[0].Sprite.Position);
+                    _hand[1].Sprite.Draw(spriteBatch, _hand[1].Sprite.Position);
                     break;
                 case 3:
-                    _hand[0].Sprite.Draw(spriteBatch, handFieldCenter - new Vector2(_hand[0].Sprite.Width + 8, 0));
-                    _hand[1].Sprite.Draw(spriteBatch, handFieldCenter);
-                    _hand[2].Sprite.Draw(spriteBatch, handFieldCenter + new Vector2(_hand[2].Sprite.Width + 8, 0));
+                    _hand[0].Sprite.Position = handFieldCenter - new Vector2(_hand[0].Sprite.Width + 8, 0);
+                    _hand[1].Sprite.Position = handFieldCenter;
+                    _hand[2].Sprite.Position = handFieldCenter + new Vector2(_hand[2].Sprite.Width + 8, 0);
+                    _hand[0].Sprite.Draw(spriteBatch, _hand[0].Sprite.Position);
+                    _hand[1].Sprite.Draw(spriteBatch, _hand[1].Sprite.Position);
+                    _hand[2].Sprite.Draw(spriteBatch, _hand[2].Sprite.Position);
                     break;
                 case 4:
-                    _hand[0].Sprite.Draw(spriteBatch, handFieldCenter - new Vector2(_hand[0].Sprite.Width * 1.5f + 4, 0));
-                    _hand[1].Sprite.Draw(spriteBatch, handFieldCenter - new Vector2(_hand[1].Sprite.Width * 0.5f + 2, 0));
-                    _hand[2].Sprite.Draw(spriteBatch, handFieldCenter + new Vector2(_hand[2].Sprite.Width * 0.5f + 2, 0));
-                    _hand[3].Sprite.Draw(spriteBatch, handFieldCenter + new Vector2(_hand[3].Sprite.Width * 1.5f + 4, 0));
+                    _hand[0].Sprite.Position = handFieldCenter - new Vector2(_hand[0].Sprite.Width * 1.5f + 4, 0);
+                    _hand[1].Sprite.Position = handFieldCenter - new Vector2(_hand[1].Sprite.Width * 0.5f + 2, 0);
+                    _hand[2].Sprite.Position = handFieldCenter + new Vector2(_hand[2].Sprite.Width * 0.5f + 2, 0);
+                    _hand[3].Sprite.Position = handFieldCenter + new Vector2(_hand[3].Sprite.Width * 1.5f + 4, 0);
+                    _hand[0].Sprite.Draw(spriteBatch, _hand[0].Sprite.Position);
+                    _hand[1].Sprite.Draw(spriteBatch, _hand[1].Sprite.Position);
+                    _hand[2].Sprite.Draw(spriteBatch, _hand[2].Sprite.Position);
+                    _hand[3].Sprite.Draw(spriteBatch, _hand[3].Sprite.Position);
                     break;
                 case 5:
-                    _hand[0].Sprite.Draw(spriteBatch, handFieldCenter - new Vector2(_hand[0].Sprite.Width * 2 + 8, 0));
-                    _hand[1].Sprite.Draw(spriteBatch, handFieldCenter - new Vector2(_hand[2].Sprite.Width + 4, 0));
-                    _hand[2].Sprite.Draw(spriteBatch, handFieldCenter);
-                    _hand[3].Sprite.Draw(spriteBatch, handFieldCenter + new Vector2(_hand[3].Sprite.Width + 4, 0));
-                    _hand[4].Sprite.Draw(spriteBatch, handFieldCenter + new Vector2(_hand[4].Sprite.Width * 2 + 8, 0));
+                    _hand[0].Sprite.Position = handFieldCenter - new Vector2(_hand[0].Sprite.Width * 2 + 8, 0);
+                    _hand[1].Sprite.Position = handFieldCenter - new Vector2(_hand[2].Sprite.Width + 4, 0);
+                    _hand[2].Sprite.Position = handFieldCenter;
+                    _hand[3].Sprite.Position = handFieldCenter + new Vector2(_hand[3].Sprite.Width + 4, 0);
+                    _hand[4].Sprite.Position = handFieldCenter + new Vector2(_hand[4].Sprite.Width * 2 + 8, 0);
+                    _hand[0].Sprite.Draw(spriteBatch, _hand[0].Sprite.Position);
+                    _hand[1].Sprite.Draw(spriteBatch, _hand[1].Sprite.Position);
+                    _hand[2].Sprite.Draw(spriteBatch, _hand[2].Sprite.Position);
+                    _hand[3].Sprite.Draw(spriteBatch, _hand[3].Sprite.Position);
+                    _hand[4].Sprite.Draw(spriteBatch, _hand[4].Sprite.Position);
                     break;
                 default:
                     break;
@@ -159,5 +174,7 @@ namespace SolitairePoker.Poker
 
             }
         }
+
+        internal Card[] GetHand() => _hand.ToArray();
     }
 }

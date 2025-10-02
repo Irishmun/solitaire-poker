@@ -12,7 +12,7 @@ namespace SolitairePoker
     public class Game1 : Core
     {
         private bool _clearScreen = true;
-        private bool _cHeld = false;
+        private bool _cHeld = false, lmbHeld = false;
 
         private int cardIndex = 0;
 
@@ -50,7 +50,7 @@ namespace SolitairePoker
             _message.Alpha = 4;
             // TODO: use this.Content to load your game content here
 
-            if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/Bicycle/Bicycle.dck",out _deck))
+            if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/Bicycle/Bicycle.dck", out _deck))
             //if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/Kenney/Kenney.dck", out _deck))
             //if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/TF2/tf2.dck",out _deck))
             {
@@ -68,15 +68,10 @@ namespace SolitairePoker
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            HandleKeyboardInputs();
+            HandleMouseInputs();
 
 
-            if (Keyboard.GetState().IsKeyUp(Keys.C) && _cHeld == true)
-            {
-                Debug.WriteLine("Toggling ClearScreen to: " + !_clearScreen);
-                _clearScreen = !_clearScreen;
-                _cHeld = false;
-            }
-            _cHeld = Keyboard.GetState().IsKeyDown(Keys.C);
             if (gameTime.ElapsedGameTime.Milliseconds > 0)
             {
                 _message.Alpha -= (float)gameTime.ElapsedGameTime.TotalSeconds * 2f;
@@ -103,6 +98,46 @@ namespace SolitairePoker
 
             SpriteBatch.End();
             base.Draw(gameTime);
+        }
+
+
+        private void HandleKeyboardInputs()
+        {
+            if (Keyboard.GetState().IsKeyUp(Keys.C) && _cHeld == true)
+            {
+                Debug.WriteLine("Toggling ClearScreen to: " + !_clearScreen);
+                _clearScreen = !_clearScreen;
+                _cHeld = false;
+            }
+            _cHeld = Keyboard.GetState().IsKeyDown(Keys.C);
+        }
+
+        private void HandleMouseInputs()
+        {
+            MouseState mouse = Mouse.GetState();
+
+            if (mouse.LeftButton == ButtonState.Pressed && lmbHeld == false)
+            {
+                Point pos = new Point(mouse.X, mouse.Y);
+                Card[] hand = _deck.GetHand();
+                if (hand != null && hand.Length > 0)
+                {
+                    for (int i = 0; i < hand.Length; i++)
+                    {
+                        if (hand[i].Sprite.ContainsPoint(pos))
+                        {
+                            Debug.WriteLine("picked the {0} of {1}s", hand[i].Face, hand[i].Suit);
+                            //click card
+                            break;
+                        }
+                    }
+                }
+                lmbHeld = true;
+            }
+            else if (mouse.LeftButton == ButtonState.Released)
+            {
+                lmbHeld = false;
+            }
         }
     }
 }
