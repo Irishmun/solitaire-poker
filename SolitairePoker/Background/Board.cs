@@ -15,6 +15,8 @@ namespace SolitairePoker.Background
         private Vector2 _handFieldCenter;
         private Rectangle _handRect;
 
+        private ToggleSprite _buttonPlayHand,_buttonDiscard;
+
         public void LoadBoard()
         {
             _boardTex = new TextureRegion(Core.Content.Load<Texture2D>("UI/board"), 0, 0, 640, 480);
