@@ -67,6 +67,36 @@ namespace SolitairePoker.Poker
             return drawn.ToArray();
         }
 
+        public bool DiscardCard(Card card)
+        {
+            if (!_deck.Contains(card))
+            {
+                return false;
+            }
+            _deck.Remove(card);
+            return true;
+        }
+        public bool DiscardCards(Card[] cards)
+        {
+            int oldCount = _deck.Count;
+            for (int i = 0; i < cards.Length; i++)
+            {
+                if (!_deck.Contains(cards[i]))
+                {
+                    System.Diagnostics.Debug.WriteLine($"Couldn't discard {cards[i]}");
+                    continue;
+                }
+                _deck.Remove(cards[i]);
+            }
+
+            if (_deck.Count == oldCount)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public void DrawDeck(SpriteBatch batch, Vector2 startPos)
         {
             //spread out cards

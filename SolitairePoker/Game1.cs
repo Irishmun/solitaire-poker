@@ -120,16 +120,27 @@ namespace SolitairePoker
             {
                 Point pos = new Point(mouse.X, mouse.Y);
                 Card[] hand = _deck.GetHand();
-                if (hand != null && hand.Length > 0)
+                if (_backGround.IsPointInHandField(pos))
                 {
-                    for (int i = 0; i < hand.Length; i++)
+                    if (hand != null && hand.Length > 0)
                     {
-                        if (hand[i].Sprite.ContainsPoint(pos))
+                        for (int i = 0; i < hand.Length; i++)
                         {
-                            Debug.WriteLine("picked the {0} of {1}s", hand[i].Face, hand[i].Suit);
-                            //click card
-                            break;
+                            if (hand[i].Sprite.ContainsPoint(pos))
+                            {
+                                Debug.WriteLine("picked the {0} of {1}s", hand[i].Face, hand[i].Suit);
+                                //click card
+                                break;
+                            }
                         }
+                    }
+                }
+                else if (_backGround.IsPointInDeckField(pos))
+                {
+                    Card[] pickedUpCards = _deck.PickupCards(1);
+                    if (pickedUpCards != null)
+                    {
+                        _deck.AddCardsToHand(pickedUpCards);
                     }
                 }
                 lmbHeld = true;
