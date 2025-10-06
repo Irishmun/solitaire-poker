@@ -7,7 +7,8 @@ namespace MonoGameLibrary.Graphics
     public class ToggleSprite : Sprite
     {
         private Dictionary<string, TextureRegion> _regions;
-        private bool _toggledOn;
+        private bool _toggledOn = false;
+        private bool _Selectable = true;
 
         /// <summary>
         /// Gets or Sets the source texture represented by this texture atlas.
@@ -17,6 +18,7 @@ namespace MonoGameLibrary.Graphics
         public ToggleSprite()
         {
             _regions = new Dictionary<string, TextureRegion>();
+            Origin = Vector2.Zero;
         }
 
         public ToggleSprite(Texture2D texture) : this()
@@ -32,7 +34,6 @@ namespace MonoGameLibrary.Graphics
                     return;
                 }
                 _regions.Add("On", region);
-                Region = region;
                 return;
             }
             else
@@ -42,6 +43,7 @@ namespace MonoGameLibrary.Graphics
                     return;
                 }
                 _regions.Add("Off", region);
+                Region = region;
                 return;
             }
         }
@@ -51,13 +53,15 @@ namespace MonoGameLibrary.Graphics
             _toggledOn = toggleOn;
         }
 
-        public void TryClick(Point pos, bool Clicked)
+        public void TryClick(Point pos, bool clicked)
         {
-            if (Clicked == false)
+            if (!_Selectable)
+            { return; }
+            if (clicked == false)
             {
                 Toggle(false);
             }
-            if (ContainsPoint(pos))
+            if (ContainsPoint(pos) && clicked)
             {
                 Toggle(true);
             }

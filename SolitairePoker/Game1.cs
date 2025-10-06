@@ -115,11 +115,13 @@ namespace SolitairePoker
         private void HandleMouseInputs()
         {
             MouseState mouse = Mouse.GetState();
-
+            Point pos = new Point(mouse.X, mouse.Y);
+            _backGround.TryClickButtons(pos, mouse.LeftButton == ButtonState.Pressed);
             if (mouse.LeftButton == ButtonState.Pressed && lmbHeld == false)
             {
-                Point pos = new Point(mouse.X, mouse.Y);
+
                 Card[] hand = _deck.GetHand();
+
                 if (_backGround.IsPointInHandField(pos))
                 {
                     if (hand != null && hand.Length > 0)

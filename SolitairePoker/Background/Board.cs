@@ -15,7 +15,7 @@ namespace SolitairePoker.Background
         private Vector2 _handFieldCenter;
         private Rectangle _handRect;
 
-        private ToggleSprite _buttonPlayHand,_buttonDiscard;
+        private ToggleSprite _buttonPlayHand, _buttonDiscard;
 
         public void LoadBoard()
         {
@@ -25,11 +25,31 @@ namespace SolitairePoker.Background
             _deckRect = new Rectangle(529, 332, 96, 128);
             //_handFieldPos = new Vector2(28, 332);
             _handRect = new Rectangle(28, 332, 460, 128);
+
+            Texture2D buttonTex = Core.Content.Load<Texture2D>("UI/button");
+            TextureRegion buttonReleased = new TextureRegion(buttonTex, 0, 0, 96, 32);
+            TextureRegion buttonPressed = new TextureRegion(buttonTex, 0, 32, 96, 32);
+            _buttonPlayHand = new ToggleSprite(buttonTex);
+            _buttonPlayHand.AddToggleRegion(false, buttonReleased);
+            _buttonPlayHand.AddToggleRegion(true, buttonPressed);
+            _buttonPlayHand.Position = new Vector2(524, 232);
+            _buttonDiscard = new ToggleSprite(buttonTex);
+            _buttonDiscard.AddToggleRegion(false, buttonReleased);
+            _buttonDiscard.Position = new Vector2(524, 272);
+            _buttonDiscard.AddToggleRegion(true, buttonPressed);
         }
 
         public void DrawBoard(SpriteBatch batch)
         {
             _boardTex.Draw(batch, Vector2.Zero);
+            _buttonDiscard.Draw(batch, _buttonDiscard.Position);
+            _buttonPlayHand.Draw(batch, _buttonPlayHand.Position);
+        }
+
+        public void TryClickButtons(Point pos, bool mouseDown)
+        {
+            _buttonDiscard.TryClick(pos, mouseDown);
+            _buttonPlayHand.TryClick(pos, mouseDown);
         }
 
         public bool IsPointInHandField(Point pos)

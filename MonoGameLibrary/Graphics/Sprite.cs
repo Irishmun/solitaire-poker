@@ -112,13 +112,20 @@ namespace MonoGameLibrary.Graphics
 
         public bool ContainsPoint(Point pos)
         {
+            Point mousePos = pos;
+            Point bounds = Region.SourceRectangle.Size;
+
             //adjust position to account for sprite origin offset
-            Point position = pos - Position.ToPoint();
             if (Origin != Vector2.Zero)
             {
-                position += new Point((int)(Region.Width * 0.5f), (int)(Region.Height * 0.5f));
+                mousePos += new Point((int)(Region.Width * 0.5f), (int)(Region.Height * 0.5f));
             }
-            return Region.Texture.Bounds.Contains(position);
+
+            if (Position.X <= mousePos.X && mousePos.X <= Position.X + bounds.X && Position.Y <= mousePos.Y)
+            {
+                return mousePos.Y <= Position.Y + bounds.Y;
+            }
+            return false;
         }
     }
 }
