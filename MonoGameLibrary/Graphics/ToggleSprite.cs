@@ -57,7 +57,7 @@ namespace MonoGameLibrary.Graphics
         {
             if (!_Selectable)
             { return; }
-            if (clicked == false)
+            if (clicked == false || !ContainsPoint(pos))
             {
                 Toggle(false);
             }

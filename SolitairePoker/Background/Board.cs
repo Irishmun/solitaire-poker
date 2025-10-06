@@ -26,17 +26,19 @@ namespace SolitairePoker.Background
             //_handFieldPos = new Vector2(28, 332);
             _handRect = new Rectangle(28, 332, 460, 128);
 
-            Texture2D buttonTex = Core.Content.Load<Texture2D>("UI/button");
+            Texture2D buttonTex = Core.Content.Load<Texture2D>("UI/buttons");
             TextureRegion buttonReleased = new TextureRegion(buttonTex, 0, 0, 96, 32);
             TextureRegion buttonPressed = new TextureRegion(buttonTex, 0, 32, 96, 32);
             _buttonPlayHand = new ToggleSprite(buttonTex);
             _buttonPlayHand.AddToggleRegion(false, buttonReleased);
             _buttonPlayHand.AddToggleRegion(true, buttonPressed);
             _buttonPlayHand.Position = new Vector2(524, 232);
+            TextureRegion buttonDiscardReleased = new TextureRegion(buttonTex, 96, 0, 96, 32);
+            TextureRegion buttonDiscardPressed = new TextureRegion(buttonTex, 96, 32, 96, 32);
             _buttonDiscard = new ToggleSprite(buttonTex);
-            _buttonDiscard.AddToggleRegion(false, buttonReleased);
+            _buttonDiscard.AddToggleRegion(false, buttonDiscardReleased);
             _buttonDiscard.Position = new Vector2(524, 272);
-            _buttonDiscard.AddToggleRegion(true, buttonPressed);
+            _buttonDiscard.AddToggleRegion(true, buttonDiscardPressed);
         }
 
         public void DrawBoard(SpriteBatch batch)

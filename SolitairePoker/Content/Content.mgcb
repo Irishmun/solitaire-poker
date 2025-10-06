@@ -3284,7 +3284,7 @@
 /processorParam:TextureFormat=Color
 /build:UI/board.png
 
-#begin UI/button.png
+#begin UI/buttons.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -3294,7 +3294,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:UI/button.png
+/build:UI/buttons.png
 
 #begin UI/deck_zone.png
 /importer:TextureImporter
