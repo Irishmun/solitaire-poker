@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary.Graphics;
+using SolitairePoker.Background;
 using System;
 using System.Collections.Generic;
 
@@ -15,12 +16,39 @@ namespace SolitairePoker.Poker
         private List<Card> _deck;
         private List<Card> _hand;
         private Sprite _cardBack;
+        private Sprite _slideCard;
+        private float _backT = 0;
+        private float _slideTime = 0.25f;
 
         public void SetDeck(Card[] cards, Sprite cardBack)
         {
             _deck = new List<Card>(cards);
             _cardBack = cardBack;
+            _slideCard = cardBack;
             _hand = new List<Card>(MAX_HAND_SIZE);
+        }
+
+        public void Update(GameTime time)
+        {
+            if (_hand.Count < MAX_HAND_SIZE)
+            {
+                if (_backT < _slideTime)
+                {
+                    _backT += (float)time.ElapsedGameTime.TotalSeconds;
+                    _slideCard.Position = Vector2.Lerp(Board.DECK_POS, new Vector2(Board.HAND_CENTER.X, Board.DECK_POS.Y), _backT / _slideTime);
+                }
+                else
+                {
+                    _hand.Add(PickupCard());
+                    _backT = 0;
+                }
+                //slide cardback from deck to hand field
+                //when there, add card to hand
+            }
+            else
+            {
+                _slideCard.Position = new Vector2(-200, -200);
+            }
         }
 
         public void ShuffleDeck(int seed = 0)
@@ -113,6 +141,8 @@ namespace SolitairePoker.Poker
             //    pos.X += _deck.LoadedCards[i].Texture.Width;
             //}
             //_deck.CardBackTex.Draw(SpriteBatch, pos);
+
+            _slideCard.Draw(batch, _slideCard.Position);
 
             Vector2 pos = startPos;// _backGround.DeckFieldPos;
             int height = _deck.Count > MAX_DECK_HEIGHT ? MAX_DECK_HEIGHT : _deck.Count;

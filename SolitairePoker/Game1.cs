@@ -25,6 +25,7 @@ namespace SolitairePoker
 
 
 
+
         public Game1() : base("Solitaire Poker", 640, 480, false)
         {
 
@@ -57,7 +58,7 @@ namespace SolitairePoker
                 System.Diagnostics.Debug.WriteLine($"Loaded deck \"{_deckLoader.LoadedDeckName}\"...");
                 _message.Text = $"Loaded Deck \"{_deckLoader.LoadedDeckName}\"...";
                 _deck.ShuffleDeck();
-                _deck.AddCardsToHand(_deck.PickupCards(5));
+                //_deck.AddCardsToHand(_deck.PickupCards(5));
             }
             _backGround.LoadBoard();
 
@@ -70,7 +71,7 @@ namespace SolitairePoker
                 Exit();
             HandleKeyboardInputs();
             HandleMouseInputs();
-
+            _deck.Update(gameTime);
 
             if (gameTime.ElapsedGameTime.Milliseconds > 0)
             {
@@ -94,7 +95,7 @@ namespace SolitairePoker
             _backGround.DrawBoard(SpriteBatch);
             _message.Draw(SpriteBatch, new Vector2(8, 4));
             _deck.DrawDeck(SpriteBatch, _backGround.DeckFieldPos);
-            _deck.DrawHand(SpriteBatch, _backGround.HandFieldCenter);
+            _deck.DrawHand(SpriteBatch, Board.HAND_CENTER);
 
             SpriteBatch.End();
             base.Draw(gameTime);
