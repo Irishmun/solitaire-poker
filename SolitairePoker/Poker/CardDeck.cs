@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary.Graphics;
+using MonoGameLibrary.Util;
 using SolitairePoker.Background;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace SolitairePoker.Poker
         private Sprite _cardBack;
         private Sprite _slideCard;
         private float _backT = 0;
-        private float _slideTime = 0.25f;
+        private float _slideTime = .5f;
 
         public void SetDeck(Card[] cards, Sprite cardBack)
         {
@@ -35,7 +36,7 @@ namespace SolitairePoker.Poker
                 if (_backT < _slideTime)
                 {
                     _backT += (float)time.ElapsedGameTime.TotalSeconds;
-                    _slideCard.Position = Vector2.Lerp(Board.DECK_POS, new Vector2(Board.HAND_CENTER.X, Board.DECK_POS.Y), _backT / _slideTime);
+                    _slideCard.Position = Vector2.Lerp(Board.DECK_POS, new Vector2(Board.HAND_CENTER.X, Board.DECK_POS.Y), EasingUtil.EaseInQuad(_backT / _slideTime));
                 }
                 else
                 {
