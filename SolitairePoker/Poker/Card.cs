@@ -19,6 +19,7 @@ namespace SolitairePoker.Poker
         public SuitEnum Suit { get => suit; set => suit = value; }
         public FaceEnum Face { get => face; set => face = value; }
         public Sprite Sprite { get => sprite; set => sprite = value; }
+        public bool Selected { get; set; }
 
         public override string ToString()
         {

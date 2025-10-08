@@ -96,7 +96,7 @@ namespace SolitairePoker
             _backGround.DrawBoard(SpriteBatch);
             _message.Draw(SpriteBatch, new Vector2(8, 4));
             _deck.DrawDeck(SpriteBatch, _backGround.DeckFieldPos);
-            _deck.DrawHand(SpriteBatch, Board.HAND_CENTER);
+            _deck.DrawHand(SpriteBatch);
 
             SpriteBatch.End();
             base.Draw(gameTime);
@@ -119,30 +119,30 @@ namespace SolitairePoker
             {
                 Card[] hand = _deck.GetHand();
 
-                if (_backGround.IsPointInHandField(_input.Mouse.Position))
+                if (hand != null && hand.Length > 0)
                 {
-                    if (hand != null && hand.Length > 0)
+                    for (int i = 0; i < hand.Length; i++)
                     {
-                        for (int i = 0; i < hand.Length; i++)
+                        if (hand[i].Sprite.ContainsPoint(_input.Mouse.Position))
                         {
-                            if (hand[i].Sprite.ContainsPoint(_input.Mouse.Position))
-                            {
-                                Debug.WriteLine("picked the {0} of {1}s", hand[i].Face, hand[i].Suit);
-                                //click card
-                                break;
-                            }
+                            Debug.WriteLine("picked the {0} of {1}s", hand[i].Face, hand[i].Suit);
+                            _deck.SelectCard(i,false);
+                            //click card
+                            break;
                         }
                     }
                 }
-                else if (_backGround.IsPointInDeckField(_input.Mouse.Position))
+                /*else if (_backGround.IsPointInDeckField(_input.Mouse.Position))
                 {
                     Card[] pickedUpCards = _deck.PickupCards(1);
                     if (pickedUpCards != null)
                     {
                         _deck.AddCardsToHand(pickedUpCards);
                     }
-                }
+                }*/
             }
+
+
         }
     }
 }

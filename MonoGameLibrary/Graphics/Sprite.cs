@@ -126,9 +126,9 @@ namespace MonoGameLibrary.Graphics
                 mousePos += new Point((int)(Width * 0.5f), (int)(Height * 0.5f));
             }
 
-            if (Position.X <= mousePos.X && mousePos.X <= (Position.X + bounds.X)*Scale.X && Position.Y <= mousePos.Y)
+            if (Position.X <= mousePos.X && mousePos.X <= Position.X + bounds.X && Position.Y <= mousePos.Y)
             {
-                return mousePos.Y <= (Position.Y + bounds.Y)*Scale.Y;
+                return mousePos.Y <= Position.Y + bounds.Y;
             }
             return false;
         }
