@@ -112,18 +112,23 @@ namespace MonoGameLibrary.Graphics
 
         public bool ContainsPoint(Point pos)
         {
+            if (pos.X < 0 || pos.Y < 0)
+            {//out of window
+                return false;
+            }
+
             Point mousePos = pos;
             Point bounds = Region.SourceRectangle.Size;
 
             //adjust position to account for sprite origin offset
             if (Origin != Vector2.Zero)
             {
-                mousePos += new Point((int)(Region.Width * 0.5f), (int)(Region.Height * 0.5f));
+                mousePos += new Point((int)(Width * 0.5f), (int)(Height * 0.5f));
             }
 
-            if (Position.X <= mousePos.X && mousePos.X <= Position.X + bounds.X && Position.Y <= mousePos.Y)
+            if (Position.X <= mousePos.X && mousePos.X <= (Position.X + bounds.X)*Scale.X && Position.Y <= mousePos.Y)
             {
-                return mousePos.Y <= Position.Y + bounds.Y;
+                return mousePos.Y <= (Position.Y + bounds.Y)*Scale.Y;
             }
             return false;
         }

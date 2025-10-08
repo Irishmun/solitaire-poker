@@ -6,13 +6,15 @@ using MonoGameLibrary.Graphics;
 using SolitairePoker.Poker;
 using System.Diagnostics;
 using SolitairePoker.Background;
+using MonoGameLibrary.Input;
 
 namespace SolitairePoker
 {
     public class Game1 : Core
     {
         private bool _clearScreen = true;
-        private bool _cHeld = false, lmbHeld = false;
+
+        private InputManager _input;
 
         private int cardIndex = 0;
 
@@ -22,9 +24,6 @@ namespace SolitairePoker
 
         private SpriteFont _font;
         private TextSprite _message;
-
-
-
 
         public Game1() : base("Solitaire Poker", 640, 480, false)
         {
@@ -38,7 +37,8 @@ namespace SolitairePoker
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            //Add your initialization logic here
+            _input = new InputManager();
             _deckLoader = new DeckLoader();
             _backGround = new Board();
             base.Initialize();
@@ -69,6 +69,7 @@ namespace SolitairePoker
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            _input.Update(gameTime);
             HandleKeyboardInputs();
             HandleMouseInputs();
             _deck.Update(gameTime);
@@ -104,32 +105,27 @@ namespace SolitairePoker
 
         private void HandleKeyboardInputs()
         {
-            if (Keyboard.GetState().IsKeyUp(Keys.C) && _cHeld == true)
+            if (_input.Keyboard.WasKeyJustReleased(Keys.C))
             {
                 Debug.WriteLine("Toggling ClearScreen to: " + !_clearScreen);
                 _clearScreen = !_clearScreen;
-                _cHeld = false;
             }
-            _cHeld = Keyboard.GetState().IsKeyDown(Keys.C);
         }
 
         private void HandleMouseInputs()
         {
-            MouseState mouse = Mouse.GetState();
-            Point pos = new Point(mouse.X, mouse.Y);
-            _backGround.TryClickButtons(pos, mouse.LeftButton == ButtonState.Pressed);
-            if (mouse.LeftButton == ButtonState.Pressed && lmbHeld == false)
+            _backGround.TryClickButtons(_input.Mouse.Position, _input.Mouse.IsButtonDown(MouseButton.Left));
+            if (_input.Mouse.WasButtonJustPressed(MouseButton.Left))
             {
-
                 Card[] hand = _deck.GetHand();
 
-                if (_backGround.IsPointInHandField(pos))
+                if (_backGround.IsPointInHandField(_input.Mouse.Position))
                 {
                     if (hand != null && hand.Length > 0)
                     {
                         for (int i = 0; i < hand.Length; i++)
                         {
-                            if (hand[i].Sprite.ContainsPoint(pos))
+                            if (hand[i].Sprite.ContainsPoint(_input.Mouse.Position))
                             {
                                 Debug.WriteLine("picked the {0} of {1}s", hand[i].Face, hand[i].Suit);
                                 //click card
@@ -138,7 +134,7 @@ namespace SolitairePoker
                         }
                     }
                 }
-                else if (_backGround.IsPointInDeckField(pos))
+                else if (_backGround.IsPointInDeckField(_input.Mouse.Position))
                 {
                     Card[] pickedUpCards = _deck.PickupCards(1);
                     if (pickedUpCards != null)
@@ -146,11 +142,6 @@ namespace SolitairePoker
                         _deck.AddCardsToHand(pickedUpCards);
                     }
                 }
-                lmbHeld = true;
-            }
-            else if (mouse.LeftButton == ButtonState.Released)
-            {
-                lmbHeld = false;
             }
         }
     }

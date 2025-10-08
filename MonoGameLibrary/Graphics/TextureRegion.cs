@@ -53,7 +53,13 @@ namespace MonoGameLibrary.Graphics
         public Texture2D Texture { get; set; }
         public Rectangle SourceRectangle { get; set; }
 
+        /// <summary>
+        /// Width of the Source Rectangle
+        /// </summary>
         public int Width => SourceRectangle.Width;
+        /// <summary>
+        /// Height of the Source Rectangle
+        /// </summary>
         public int Height => SourceRectangle.Height;
     }
 }
