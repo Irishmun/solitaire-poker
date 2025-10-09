@@ -17,14 +17,17 @@ namespace SolitairePoker.Poker
 
         private List<Card> _deck;
         private List<Card> _hand;
+        private List<Card> _discard;
         private Sprite _cardBack;
         private Sprite _slideCard;
         private float _backT = 0;
         private float _slideTime = .5f;
+        Random rng;
 
         public void SetDeck(Card[] cards, Sprite cardBack)
         {
             _deck = new List<Card>(cards);
+            _discard = new List<Card>(cards.Length);
             _cardBack = cardBack;
             _slideCard = cardBack;
             _hand = new List<Card>(MAX_HAND_SIZE);
@@ -32,8 +35,9 @@ namespace SolitairePoker.Poker
 
         public void Update(GameTime time)
         {
-            if (_hand.Count < MAX_HAND_SIZE)
+            if (_hand.Count < MAX_HAND_SIZE && _deck.Count > 0)
             {
+                //fix infinite loop of drawing when not enough cards
                 if (_backT < _slideTime)
                 {
                     _backT += (float)time.ElapsedGameTime.TotalSeconds;
@@ -59,7 +63,7 @@ namespace SolitairePoker.Poker
 
         public void ShuffleDeck(int seed = 0)
         {
-            Random rng = new Random(seed);
+            rng = new Random(seed);
             int n = _deck.Count;
             while (n > 1)
             {
@@ -76,15 +80,24 @@ namespace SolitairePoker.Poker
             _hand.AddRange(cards);
             SetCardPositions(Board.HAND_CENTER);
         }
-        public void AddCardToHand(Card card)
+        public void AddCardToHand(Card? card)
         {
-            _hand.Add(card);
+            if (card == null)
+            {
+                return;
+            }
+            _hand.Add((Card)card);
             SetCardPositions(Board.HAND_CENTER);
         }
 
-        public Card PickupCard()
+        public Card? PickupCard()
         {
-            return PickupCards(1)[0];
+            Card[] c = PickupCards(1);
+            if (c.Length <= 0)
+            {
+                return null;
+            }
+            return c[0];
         }
 
         public Card[] PickupCards(int cards)
@@ -109,12 +122,14 @@ namespace SolitairePoker.Poker
             {
                 return false;
             }
+            AddToDiscard(card);
             _hand.Remove(card);
             return true;
         }
         public bool DiscardCards(Card[] cards)
         {
             int oldCount = _hand.Count;
+
             for (int i = 0; i < cards.Length; i++)
             {
                 if (!_hand.Contains(cards[i]))
@@ -122,6 +137,7 @@ namespace SolitairePoker.Poker
                     System.Diagnostics.Debug.WriteLine($"Couldn't discard {cards[i]}");
                     continue;
                 }
+                AddToDiscard(cards[i]);
                 _hand.Remove(cards[i]);
             }
 
@@ -131,6 +147,17 @@ namespace SolitairePoker.Poker
             }
 
             return true;
+        }
+
+        private void AddToDiscard(Card card)
+        {
+            if (rng == null)
+            {
+                rng = new Random();
+            }
+            card.Sprite.Rotation = MathHelper.ToRadians(360f * rng.NextSingle());
+            card.Sprite.Position = Board.DISCARD_POS;
+            _discard.Add(card);
         }
 
         public void SelectCard(int cardIndex, bool forceUnselect = false)
@@ -226,6 +253,13 @@ namespace SolitairePoker.Poker
             for (int i = 0; i < _hand.Count; i++)
             {
                 _hand[i].Sprite.Draw(spriteBatch, _hand[i].Sprite.Position);
+            }
+        }
+        public void DrawDiscard(SpriteBatch spriteBatch)
+        {
+            for (int i = 0; i < _discard.Count; i++)
+            {
+                _discard[i].Sprite.Draw(spriteBatch, _discard[i].Sprite.Position);
             }
         }
 

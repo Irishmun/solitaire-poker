@@ -10,6 +10,7 @@ namespace SolitairePoker.UI
         private const int MAX_HAND_CARDS = 5;
         public static readonly Vector2 HAND_CENTER = new Vector2(253, 391);
         public static readonly Vector2 DECK_POS = new Vector2(529, 332);
+        public static readonly Vector2 DISCARD_POS = new Vector2(89, 146);
 
         private TextureRegion _boardTex;
         private Rectangle _deckRect;

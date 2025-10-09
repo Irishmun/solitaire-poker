@@ -98,6 +98,7 @@ namespace SolitairePoker
             _message.Draw(SpriteBatch, new Vector2(8, 4));
             _deck.DrawDeck(SpriteBatch, _backGround.DeckFieldPos);
             _deck.DrawHand(SpriteBatch);
+            _deck.DrawDiscard(SpriteBatch);
 
             SpriteBatch.End();
             base.Draw(gameTime);
