@@ -2,9 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary.Graphics;
 using MonoGameLibrary.Util;
-using SolitairePoker.Background;
+using SolitairePoker.UI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SolitairePoker.Poker
 {
@@ -104,27 +105,27 @@ namespace SolitairePoker.Poker
 
         public bool DiscardCard(Card card)
         {
-            if (!_deck.Contains(card))
+            if (!_hand.Contains(card))
             {
                 return false;
             }
-            _deck.Remove(card);
+            _hand.Remove(card);
             return true;
         }
         public bool DiscardCards(Card[] cards)
         {
-            int oldCount = _deck.Count;
+            int oldCount = _hand.Count;
             for (int i = 0; i < cards.Length; i++)
             {
-                if (!_deck.Contains(cards[i]))
+                if (!_hand.Contains(cards[i]))
                 {
                     System.Diagnostics.Debug.WriteLine($"Couldn't discard {cards[i]}");
                     continue;
                 }
-                _deck.Remove(cards[i]);
+                _hand.Remove(cards[i]);
             }
 
-            if (_deck.Count == oldCount)
+            if (_hand.Count == oldCount)
             {
                 return false;
             }
@@ -264,6 +265,7 @@ namespace SolitairePoker.Poker
 
         }
 
-        internal Card[] GetHand() => _hand.ToArray();
+        public Card[] GetHand() => _hand.ToArray();
+        public Card[] GetSelectedCards() => _hand.Where(x => x.Selected == true).ToArray();
     }
 }

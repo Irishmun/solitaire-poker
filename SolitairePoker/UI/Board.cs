@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGameLibrary;
 using MonoGameLibrary.Graphics;
 
-namespace SolitairePoker.Background
+namespace SolitairePoker.UI
 {
     public class Board
     {
@@ -16,8 +16,8 @@ namespace SolitairePoker.Background
         // private Vector2 _handFieldPos;
         private Rectangle _handRect;
 
-        private ToggleSprite _buttonPlayHand, _buttonDiscard;
-
+        private PlayHandButton _buttonPlayHand;
+        private DiscardHandButton _buttonDiscard;
         public void LoadBoard()
         {
             _boardTex = new TextureRegion(Core.Content.Load<Texture2D>("UI/board"), 0, 0, 640, 480);
@@ -29,29 +29,43 @@ namespace SolitairePoker.Background
             Texture2D buttonTex = Core.Content.Load<Texture2D>("UI/buttons");
             TextureRegion buttonReleased = new TextureRegion(buttonTex, 0, 0, 96, 32);
             TextureRegion buttonPressed = new TextureRegion(buttonTex, 0, 32, 96, 32);
-            _buttonPlayHand = new ToggleSprite(buttonTex);
-            _buttonPlayHand.AddToggleRegion(false, buttonReleased);
-            _buttonPlayHand.AddToggleRegion(true, buttonPressed);
-            _buttonPlayHand.Position = new Vector2(524, 232);
+            _buttonPlayHand = new PlayHandButton(buttonTex);
+            _buttonPlayHand.Sprite.AddToggleRegion(false, buttonReleased);
+            _buttonPlayHand.Sprite.AddToggleRegion(true, buttonPressed);
+            _buttonPlayHand.Sprite.Position = new Vector2(524, 232);
             TextureRegion buttonDiscardReleased = new TextureRegion(buttonTex, 96, 0, 96, 32);
             TextureRegion buttonDiscardPressed = new TextureRegion(buttonTex, 96, 32, 96, 32);
-            _buttonDiscard = new ToggleSprite(buttonTex);
-            _buttonDiscard.AddToggleRegion(false, buttonDiscardReleased);
-            _buttonDiscard.Position = new Vector2(524, 272);
-            _buttonDiscard.AddToggleRegion(true, buttonDiscardPressed);
+            _buttonDiscard = new DiscardHandButton(buttonTex);
+            _buttonDiscard.Sprite.AddToggleRegion(false, buttonDiscardReleased);
+            _buttonDiscard.Sprite.Position = new Vector2(524, 272);
+            _buttonDiscard.Sprite.AddToggleRegion(true, buttonDiscardPressed);
         }
 
         public void DrawBoard(SpriteBatch batch)
         {
             _boardTex.Draw(batch, Vector2.Zero);
-            _buttonDiscard.Draw(batch, _buttonDiscard.Position);
-            _buttonPlayHand.Draw(batch, _buttonPlayHand.Position);
+            _buttonDiscard.Sprite.Draw(batch, _buttonDiscard.Sprite.Position);
+            _buttonPlayHand.Sprite.Draw(batch, _buttonPlayHand.Sprite.Position);
         }
 
         public void TryClickButtons(Point pos, bool mouseDown)
         {
-            _buttonDiscard.TryClick(pos, mouseDown);
-            _buttonPlayHand.TryClick(pos, mouseDown);
+            _buttonDiscard.Sprite.TryClick(pos, mouseDown);
+            _buttonPlayHand.Sprite.TryClick(pos, mouseDown);
+        }
+
+        public ButtonBase TryGetSelectedButton(Point pos)
+        {
+            if (_buttonDiscard.Sprite.ContainsPoint(pos))
+            {
+                return _buttonDiscard;
+            }
+
+            if (_buttonPlayHand.Sprite.ContainsPoint(pos))
+            {
+                return _buttonPlayHand;
+            }
+            return null;
         }
 
         public bool IsPointInHandField(Point pos)

@@ -5,8 +5,9 @@ using MonoGameLibrary;
 using MonoGameLibrary.Graphics;
 using SolitairePoker.Poker;
 using System.Diagnostics;
-using SolitairePoker.Background;
+using SolitairePoker.UI;
 using MonoGameLibrary.Input;
+using System;
 
 namespace SolitairePoker
 {
@@ -57,7 +58,7 @@ namespace SolitairePoker
             {
                 System.Diagnostics.Debug.WriteLine($"Loaded deck \"{_deckLoader.LoadedDeckName}\"...");
                 _message.Text = $"Loaded Deck \"{_deckLoader.LoadedDeckName}\"...";
-                _deck.ShuffleDeck();
+                _deck.ShuffleDeck((int)DateTime.Now.Ticks);
                 //_deck.AddCardsToHand(_deck.PickupCards(5));
             }
             _backGround.LoadBoard();
@@ -126,7 +127,7 @@ namespace SolitairePoker
                         if (hand[i].Sprite.ContainsPoint(_input.Mouse.Position))
                         {
                             Debug.WriteLine("picked the {0} of {1}s", hand[i].Face, hand[i].Suit);
-                            _deck.SelectCard(i,false);
+                            _deck.SelectCard(i, false);
                             //click card
                             break;
                         }
@@ -141,8 +142,13 @@ namespace SolitairePoker
                     }
                 }*/
             }
-
-
+            if (_input.Mouse.WasButtonJustReleased(MouseButton.Left))
+            {
+                //get selected button, do that one
+                ButtonBase button = _backGround.TryGetSelectedButton(_input.Mouse.Position);
+                Debug.WriteLine($"Selected button: " + button);
+                button?.ClickHandButton(_deck);
+            }
         }
     }
 }
