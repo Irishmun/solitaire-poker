@@ -37,7 +37,6 @@ namespace SolitairePoker.Poker
         {
             if (_hand.Count < MAX_HAND_SIZE && _deck.Count > 0)
             {
-                //fix infinite loop of drawing when not enough cards
                 if (_backT < _slideTime)
                 {
                     _backT += (float)time.ElapsedGameTime.TotalSeconds;
@@ -107,7 +106,7 @@ namespace SolitairePoker.Poker
                 return null;
             }
             List<Card> drawn = new List<Card>(cards);
-            int toDraw = cards >= _deck.Count ? _deck.Count - 1 : cards;
+            int toDraw = cards >= _deck.Count ? _deck.Count : cards;
             for (int i = 0; i < toDraw; i++)
             {
                 drawn.Add(_deck[i]);
