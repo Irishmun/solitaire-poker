@@ -154,7 +154,7 @@ namespace SolitairePoker.Poker
             {
                 rng = new Random();
             }
-            card.Sprite.Rotation = MathHelper.ToRadians(360f * rng.NextSingle());
+            card.Sprite.Rotation = MathHelper.ToRadians(rng.Next(-15, 15));
             card.Sprite.Position = Board.DISCARD_POS;
             _discard.Add(card);
         }
@@ -258,7 +258,7 @@ namespace SolitairePoker.Poker
         {
             for (int i = 0; i < _discard.Count; i++)
             {
-                _discard[i].Sprite.Draw(spriteBatch, _discard[i].Sprite.Position);
+                _discard[i].Sprite.Draw(spriteBatch, _discard[i].Sprite.Position, ((float)i) / (float)_discard.Count);
             }
         }
 

@@ -110,6 +110,11 @@ namespace MonoGameLibrary.Graphics
             Region.Draw(spriteBatch, position, Color, Rotation, Origin, Scale, Effects, LayerDepth);
         }
 
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, float layerDepth = 0.0f)
+        {
+            Region.Draw(spriteBatch, position, Color, Rotation, Origin, Scale, Effects, layerDepth);
+        }
+
         public bool ContainsPoint(Point pos)
         {
             if (pos.X < 0 || pos.Y < 0)
