@@ -33,12 +33,12 @@ namespace SolitairePoker.UI
             _buttonPlayHand = new PlayHandButton(buttonTex);
             _buttonPlayHand.Sprite.AddToggleRegion(false, buttonReleased);
             _buttonPlayHand.Sprite.AddToggleRegion(true, buttonPressed);
-            _buttonPlayHand.Sprite.Position = new Vector2(524, 232);
+            _buttonPlayHand.Sprite.Position = new Vector2(523, 232);
             TextureRegion buttonDiscardReleased = new TextureRegion(buttonTex, 96, 0, 96, 32);
             TextureRegion buttonDiscardPressed = new TextureRegion(buttonTex, 96, 32, 96, 32);
             _buttonDiscard = new DiscardHandButton(buttonTex);
             _buttonDiscard.Sprite.AddToggleRegion(false, buttonDiscardReleased);
-            _buttonDiscard.Sprite.Position = new Vector2(524, 272);
+            _buttonDiscard.Sprite.Position = new Vector2(523, 272);
             _buttonDiscard.Sprite.AddToggleRegion(true, buttonDiscardPressed);
         }
 
