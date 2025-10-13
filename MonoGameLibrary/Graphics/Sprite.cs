@@ -108,6 +108,7 @@ namespace MonoGameLibrary.Graphics
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
             Region.Draw(spriteBatch, position, Color, Rotation, Origin, Scale, Effects, LayerDepth);
+
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position, float layerDepth = 0.0f)
@@ -127,13 +128,13 @@ namespace MonoGameLibrary.Graphics
 
             //adjust position to account for sprite origin offset
             if (Origin != Vector2.Zero)
-            {
+            {//TODO: figure out way to handle this correctly (currently origin is either top-left or center)
                 mousePos += new Point((int)(Width * 0.5f), (int)(Height * 0.5f));
             }
 
-            if (Position.X <= mousePos.X && mousePos.X <= Position.X + bounds.X && Position.Y <= mousePos.Y)
+            if (Position.X <= mousePos.X && mousePos.X <= Position.X + Width && Position.Y <= mousePos.Y)
             {
-                return mousePos.Y <= Position.Y + bounds.Y;
+                return mousePos.Y <= Position.Y + Height;
             }
             return false;
         }
