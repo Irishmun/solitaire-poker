@@ -8,6 +8,7 @@ using System.Diagnostics;
 using SolitairePoker.UI;
 using MonoGameLibrary.Input;
 using System;
+using System.Linq;
 
 namespace SolitairePoker
 {
@@ -23,15 +24,16 @@ namespace SolitairePoker
         private CardDeck _deck;
         private Board _backGround;
 
+        private MenuBar _menuBar;
         private SpriteFont _font;
         private TextSprite _message;
 
         public Game1() : base("Solitaire Poker", 640, 480, false)
         {
-
-            //IntPtr hWnd = Window.Handle;
-            //System.Windows.Forms.Control ctrl = System.Windows.Forms.Control.FromHandle(hWnd);
-            //System.Windows.Forms.Form form = ctrl.FindForm();
+            IntPtr hWnd = Window.Handle;
+            System.Windows.Forms.Control ctrl = System.Windows.Forms.Control.FromHandle(hWnd);
+            System.Windows.Forms.Form form = ctrl.FindForm();
+            _menuBar = new MenuBar(form);
             //form.TransparencyKey = System.Drawing.Color.Magenta;
 
         }
@@ -39,6 +41,7 @@ namespace SolitairePoker
         protected override void Initialize()
         {
             //Add your initialization logic here
+            _menuBar.Initialize();
             _input = new InputManager();
             _deckLoader = new DeckLoader();
             _backGround = new Board();
@@ -49,12 +52,13 @@ namespace SolitairePoker
         {
             _font = Content.Load<SpriteFont>("Font");
             _message = new TextSprite(_font, true, new Vector2(2, 2));
+            _message.Position = new Vector2(8, 28);
             _message.Alpha = 4;
             // TODO: use this.Content to load your game content here
-
+            _menuBar.AddDecksToDropDown(_deckLoader.GetAllDeckNames(Content));
             //if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/Bicycle/Bicycle.dck", out _deck))
-            if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/Kenney/Kenney.dck", out _deck))
-            //if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/TF2/tf2.dck",out _deck))
+            //if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/Kenney/Kenney.dck", out _deck))
+            if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/TF2/tf2.dck", out _deck))
             {
                 System.Diagnostics.Debug.WriteLine($"Loaded deck \"{_deckLoader.LoadedDeckName}\"...");
                 _message.Text = $"Loaded Deck \"{_deckLoader.LoadedDeckName}\"...";
@@ -63,7 +67,27 @@ namespace SolitairePoker
             }
             _backGround.LoadBoard();
 
+            _menuBar.TSMI_CloseGame.Click += TSMI_CloseGame_Click;
+            _menuBar.TSMI_ChooseDeck.DropDownItemClicked += TSMI_ChooseDeck_DropDownItemClicked;
+
             base.LoadContent();
+        }
+
+        private void TSMI_ChooseDeck_DropDownItemClicked(object sender, System.Windows.Forms.ToolStripItemClickedEventArgs e)
+        {
+            if (e.ClickedItem == null)
+            { return; }
+            Debug.WriteLine(e.ClickedItem);
+            if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/" + e.ClickedItem, out _deck))
+            {
+                _message.Text = $"Loaded Deck \"{_deckLoader.LoadedDeckName}\"...";
+                _message.Alpha = 4;
+            }
+        }
+
+        private void TSMI_CloseGame_Click(object sender, EventArgs e)
+        {
+            Exit();
         }
 
         protected override void Update(GameTime gameTime)
@@ -94,8 +118,9 @@ namespace SolitairePoker
 
             SpriteBatch.Begin(SpriteSortMode.FrontToBack, samplerState: SamplerState.PointWrap);
             // TODO: Add your drawing code here
+
             _backGround.DrawBoard(SpriteBatch);
-            _message.Draw(SpriteBatch, new Vector2(8, 4));
+            _message.Draw(SpriteBatch);
             _deck.DrawDeck(SpriteBatch, _backGround.DeckFieldPos);
             _deck.DrawHand(SpriteBatch);
             _deck.DrawDiscard(SpriteBatch);

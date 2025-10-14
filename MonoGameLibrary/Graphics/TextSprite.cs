@@ -13,6 +13,7 @@ namespace MonoGameLibrary.Graphics
         private Color _foreColor = Color.White;
         private Color _backColor = Color.Black;
         private float _alpha = 1;
+        private Vector2 _position;
 
         public TextSprite()
         { }
@@ -28,6 +29,11 @@ namespace MonoGameLibrary.Graphics
             _shadowOffset = offset;
         }
 
+        public void Draw(SpriteBatch batch)
+        {
+            Draw(batch, _position);
+        }
+
         public void Draw(SpriteBatch batch, Vector2 position)
         {
             float alpha = Math.Clamp(Math.Min(_alpha, 1), 0, 1);
@@ -38,8 +44,10 @@ namespace MonoGameLibrary.Graphics
             }
         }
 
+
         public string Text { get => _text; set => _text = value; }
         public Color Color { get => _foreColor; set => _foreColor = value; }
         public float Alpha { get => _alpha; set => _alpha = value; }
+        public Vector2 Position { get => _position; set => _position = value; }
     }
 }

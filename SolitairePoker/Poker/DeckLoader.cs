@@ -23,6 +23,27 @@ namespace SolitairePoker.Poker
         private Vector2 _origin = new Vector2(-1);//top-left corner of the card
         private Vector2 _size = Vector2.Zero;//size of the texture to be used
 
+        public string[] GetAllDeckNames(ContentManager content, string basePath = "Decks")
+        {
+            List<string> deckNames = new List<string>();
+            string path = Path.Join(content.RootDirectory, basePath);
+            DirectoryInfo dir = new DirectoryInfo(path);
+            if (!dir.Exists)
+            {
+                System.Diagnostics.Debug.WriteLine("[ERROR]: Unable to find path: " + path);
+                return deckNames.ToArray();
+            }
+            DirectoryInfo[] subDirs = dir.GetDirectories();
+            for (int i = 0; i < subDirs.Length; i++)
+            {
+                FileInfo[] files = subDirs[i].GetFiles("*.dck");
+                if (files.Length == 0)
+                { continue; }
+                deckNames.Add(Path.Join(subDirs[i].Name, files[0].Name));
+            }
+            return deckNames.ToArray();
+        }
+
         public bool LoadDeckIntoMemory(ContentManager content, string deckFile, out CardDeck deck)
         {
             deck = new CardDeck();
@@ -61,7 +82,7 @@ namespace SolitairePoker.Poker
                 return false;
             }
 
-            deck.SetDeck(cards,_cardBackSprite);
+            deck.SetDeck(cards, _cardBackSprite);
 
             Sprite LoadTexture(string name)
             {
