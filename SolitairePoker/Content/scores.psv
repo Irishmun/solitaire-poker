@@ -1,12 +1,12 @@
-Hand		|chips	|mult	|total
+;;Hand			|chips	|mult	|total
 ;;====================================
-High card:	|5	|1	|5
-Pair:		|10	|2	|20
-two Pair:	|20	|2	|40
-Three/kind:	|30	|3	|90
-straight:	|30	|4	|120
-Flush:		|35	|4	|140
-Full House:	|40	|4	|160
-Four/kind:	|60	|7	|420
-Straight Flush:	|100	|8	|800
-Royal Flush:	|100	|8	|800
+High card		|5		|1		|5
+Pair			|10		|2		|20
+two Pair		|20		|2		|40
+Three/kind		|30		|3		|90
+straight		|30		|4		|120
+Flush			|35		|4		|140
+Full House		|40		|4		|160
+Four/kind		|60		|7		|420
+Straight Flush	|100	|8		|800
+Royal Flush		|100	|8		|800

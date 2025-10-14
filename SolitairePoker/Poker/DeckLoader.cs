@@ -48,6 +48,8 @@ namespace SolitairePoker.Poker
         {
             deck = new CardDeck();
             Card[] cards;
+            _size = Vector2.Zero;
+            _origin = new Vector2(-1);
             try
             {
                 cards = GetCardNames(deckFile, content.RootDirectory);

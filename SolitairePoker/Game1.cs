@@ -58,7 +58,8 @@ namespace SolitairePoker
             _menuBar.AddDecksToDropDown(_deckLoader.GetAllDeckNames(Content));
             //if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/Bicycle/Bicycle.dck", out _deck))
             //if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/Kenney/Kenney.dck", out _deck))
-            if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/TF2/tf2.dck", out _deck))
+            //if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/TF2/tf2.dck", out _deck))
+            if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/Inventory/inventory.dck", out _deck))
             {
                 System.Diagnostics.Debug.WriteLine($"Loaded deck \"{_deckLoader.LoadedDeckName}\"...");
                 _message.Text = $"Loaded Deck \"{_deckLoader.LoadedDeckName}\"...";
@@ -80,6 +81,7 @@ namespace SolitairePoker
             Debug.WriteLine(e.ClickedItem);
             if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/" + e.ClickedItem, out _deck))
             {
+                _deck.ShuffleDeck((int)DateTime.Now.Ticks);
                 _message.Text = $"Loaded Deck \"{_deckLoader.LoadedDeckName}\"...";
                 _message.Alpha = 4;
             }
@@ -116,7 +118,7 @@ namespace SolitairePoker
                 GraphicsDevice.Clear(Color.Green);
             }
 
-            SpriteBatch.Begin(SpriteSortMode.FrontToBack, samplerState: SamplerState.PointWrap);
+            SpriteBatch.Begin(SpriteSortMode.FrontToBack, samplerState: SamplerState.AnisotropicClamp);
             // TODO: Add your drawing code here
 
             _backGround.DrawBoard(SpriteBatch);
