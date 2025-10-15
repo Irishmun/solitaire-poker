@@ -50,10 +50,16 @@ namespace SolitairePoker.Poker
             //if so, check how many (pair, three of a kind, four of a kind)
             //check if multiple pairs (two pair)
             //check if sequential pairing (straight)
+            //check if pair & three of a kind (full house)
             //check if all same suit (flush)
             //check if all same suit & sequential (straight flush)
             //check if all same suit & face cards (royal flush)
-
+            if (hand.Length >= 5 && hand.Select(x => x.Face).Count() == 1)//flush?
+            {
+                handName = "Flush";
+                score = _handScore[handName];
+                return true;
+            }
             return false;
         }
     }
