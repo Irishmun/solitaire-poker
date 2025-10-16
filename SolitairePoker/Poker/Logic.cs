@@ -102,7 +102,7 @@ namespace SolitairePoker.Poker
                 return "Three of a kind";
             }
 
-            if (same2 == 2)
+            if (same2 == 4)//2)//two pair not correct
             {
                 return "Two Pair";
             }
