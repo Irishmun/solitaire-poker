@@ -19,7 +19,7 @@ namespace SolitairePoker.UI
             return;
         }
 
-        public override void ClickHandButton(CardDeck deck)
+        public override void ClickHandButton(CardDeck deck, Logic logic)
         {
             deck.DiscardCards(deck.GetSelectedCards());
         }

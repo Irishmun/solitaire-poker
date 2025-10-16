@@ -1,6 +1,6 @@
 ﻿namespace SolitairePoker.Poker
 {
-    public enum FaceEnum
+    public enum FaceEnum: byte
     {
         NONE=0,
         FACE_ACE=1,

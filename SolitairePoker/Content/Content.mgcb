@@ -3272,6 +3272,9 @@
 /processorParam:TextureFormat=Compressed
 /build:Font.spritefont
 
+#begin scores.psv
+/copy:scores.psv
+
 #begin UI/board.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -17,8 +17,8 @@ namespace SolitairePoker
         private bool _clearScreen = true;
 
         private InputManager _input;
+        private Logic _pokerLogic;
 
-        private int cardIndex = 0;
 
         private DeckLoader _deckLoader;
         private CardDeck _deck;
@@ -26,7 +26,7 @@ namespace SolitairePoker
 
         private MenuBar _menuBar;
         private SpriteFont _font;
-        private TextSprite _message;
+        private TextSprite _message, _totalScore, _scoredHistory, _handHistory;
 
         public Game1() : base("Solitaire Poker", 640, 480, false)
         {
@@ -45,6 +45,8 @@ namespace SolitairePoker
             _input = new InputManager();
             _deckLoader = new DeckLoader();
             _backGround = new Board();
+            _pokerLogic = new Logic();
+            _pokerLogic.LoadSettings();
             base.Initialize();
         }
 
@@ -54,6 +56,17 @@ namespace SolitairePoker
             _message = new TextSprite(_font, true, new Vector2(2, 2));
             _message.Position = new Vector2(8, 28);
             _message.Alpha = 4;
+
+            _totalScore = new TextSprite(_font, false);
+            _totalScore.Position = new Vector2(438, 231);
+            _totalScore.Text = string.Empty;
+            _scoredHistory = new TextSprite(_font, false);
+            _scoredHistory.Position = new Vector2(580, 54);
+            _scoredHistory.Text = string.Empty;
+            _handHistory = new TextSprite(_font, false);
+            _handHistory.Position = new Vector2(341, 54);
+            _handHistory.Text = string.Empty;
+
             // TODO: use this.Content to load your game content here
             _menuBar.AddDecksToDropDown(_deckLoader.GetAllDeckNames(Content));
             //if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/Bicycle/Bicycle.dck", out _deck))
@@ -96,6 +109,8 @@ namespace SolitairePoker
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            // TODO: Add your update logic here
+
             _input.Update(gameTime);
             HandleKeyboardInputs();
             HandleMouseInputs();
@@ -105,7 +120,11 @@ namespace SolitairePoker
             {
                 _message.Alpha -= (float)gameTime.ElapsedGameTime.TotalSeconds * 2f;
             }
-            // TODO: Add your update logic here
+
+            _totalScore.Text = ScoreBoard.TotalScore.ToString();
+            _totalScore.Position = new Vector2(438 - _font.MeasureString(_totalScore.Text).X, 231);
+            _handHistory.Text = ScoreBoard.GetFormattedHandHistory();
+            _scoredHistory.Text = ScoreBoard.GetFormattedScoreHistory();
 
             base.Update(gameTime);
         }
@@ -123,6 +142,9 @@ namespace SolitairePoker
 
             _backGround.DrawBoard(SpriteBatch);
             _message.Draw(SpriteBatch);
+            _totalScore.Draw(SpriteBatch);
+            _scoredHistory.Draw(SpriteBatch);
+            _handHistory.Draw(SpriteBatch);
             _deck.DrawDeck(SpriteBatch, _backGround.DeckFieldPos);
             _deck.DrawHand(SpriteBatch);
             _deck.DrawDiscard(SpriteBatch);
@@ -175,7 +197,7 @@ namespace SolitairePoker
                 //get selected button, do that one
                 ButtonBase button = _backGround.TryGetSelectedButton(_input.Mouse.Position);
                 Debug.WriteLine($"Selected button: " + button);
-                button?.ClickHandButton(_deck);
+                button?.ClickHandButton(_deck, _pokerLogic);
             }
         }
     }

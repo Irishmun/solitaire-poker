@@ -19,7 +19,7 @@ namespace SolitairePoker.UI
             return;
         }
 
-        public override void ClickHandButton(CardDeck deck)
+        public override void ClickHandButton(CardDeck deck, Logic logic)
         {
             Card[] selected = deck.GetSelectedCards();
             if (selected.Length == 0)
@@ -28,6 +28,12 @@ namespace SolitairePoker.UI
             //play hand 
             //discard played cards
             //draw new cards
+            string scoredHand = logic.EvaluateHand(selected);
+
+            if (!string.IsNullOrWhiteSpace(scoredHand))
+            {
+                logic.ApplyScore(scoredHand);
+            }
 
             deck.DiscardCards(selected);
         }

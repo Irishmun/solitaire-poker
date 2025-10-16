@@ -1,6 +1,6 @@
 ﻿namespace SolitairePoker.Poker
 {
-    public enum SuitEnum
+    public enum SuitEnum: byte
     {
         SUIT_CLUBS = 0,
         SUIT_HEARTS = 1,

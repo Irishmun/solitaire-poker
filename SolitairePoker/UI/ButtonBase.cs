@@ -16,7 +16,7 @@ namespace SolitairePoker.UI
             Sprite = new ToggleSprite(texture);
         }
 
-        public abstract void ClickHandButton(CardDeck deck);
+        public abstract void ClickHandButton(CardDeck deck, Logic logic);
         public abstract void ClickButton();
     }
 }
