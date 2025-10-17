@@ -102,7 +102,7 @@ namespace SolitairePoker.Poker
                 return "Three of a kind";
             }
 
-            if (same2 == 4)//2)//two pair not correct
+            if (same2 == 2)//two pair not correct
             {
                 return "Two Pair";
             }
@@ -153,7 +153,17 @@ namespace SolitairePoker.Poker
                 }
             }
 
-            return sameCards.Count;
+            List<FaceEnum> ret = new List<FaceEnum>();
+
+            for (int i = 0; i < sameCards.Count; i++)
+            {
+                if (!ret.Contains(sameCards[i][0].Face))
+                {
+                    ret.Add(sameCards[i][0].Face);
+                }
+            }
+
+            return ret.Count;
         }
 
         private int GetStraight(Card[] hand)

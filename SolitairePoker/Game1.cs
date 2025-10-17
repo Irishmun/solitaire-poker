@@ -26,7 +26,7 @@ namespace SolitairePoker
 
         private MenuBar _menuBar;
         private SpriteFont _font;
-        private TextSprite _message, _totalScore, _scoredHistory, _handHistory;
+        private TextSprite _message, _totalScore, _scoredHistory, _handHistory, _fps;
 
         public Game1() : base("Solitaire Poker", 640, 480, false)
         {
@@ -34,6 +34,8 @@ namespace SolitairePoker
             System.Windows.Forms.Control ctrl = System.Windows.Forms.Control.FromHandle(hWnd);
             System.Windows.Forms.Form form = ctrl.FindForm();
             _menuBar = new MenuBar(form);
+            IsFixedTimeStep = false;
+            Graphics.SynchronizeWithVerticalRetrace = false;
             //form.TransparencyKey = System.Drawing.Color.Magenta;
 
         }
@@ -56,6 +58,10 @@ namespace SolitairePoker
             _message = new TextSprite(_font, true, new Vector2(2, 2));
             _message.Position = new Vector2(8, 28);
             _message.Alpha = 4;
+
+            _fps = new TextSprite(_font, false);
+            _fps.Position = new Vector2(8, 28);
+            _fps.Text = "0 FPS";
 
             _totalScore = new TextSprite(_font, false);
             _totalScore.Position = new Vector2(438, 231);
@@ -119,12 +125,14 @@ namespace SolitairePoker
             if (gameTime.ElapsedGameTime.Milliseconds > 0)
             {
                 _message.Alpha -= (float)gameTime.ElapsedGameTime.TotalSeconds * 2f;
+                _fps.Text = string.Format("{0} FPS", Math.Round((1f / ((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f)),0,MidpointRounding.AwayFromZero));
             }
 
             _totalScore.Text = ScoreBoard.TotalScore.ToString();
             _totalScore.Position = new Vector2(438 - _font.MeasureString(_totalScore.Text).X, 231);
             _handHistory.Text = ScoreBoard.GetFormattedHandHistory();
             _scoredHistory.Text = ScoreBoard.GetFormattedScoreHistory();
+            _fps.Position = new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth - _font.MeasureString(_fps.Text).X - 8, 28);
 
             base.Update(gameTime);
         }
@@ -137,7 +145,7 @@ namespace SolitairePoker
                 GraphicsDevice.Clear(Color.Green);
             }
 
-            SpriteBatch.Begin(SpriteSortMode.FrontToBack, samplerState: SamplerState.AnisotropicClamp);
+            SpriteBatch.Begin(SpriteSortMode.FrontToBack, samplerState: SamplerState.LinearClamp);
             // TODO: Add your drawing code here
 
             _backGround.DrawBoard(SpriteBatch);
@@ -145,6 +153,8 @@ namespace SolitairePoker
             _totalScore.Draw(SpriteBatch);
             _scoredHistory.Draw(SpriteBatch);
             _handHistory.Draw(SpriteBatch);
+            _fps.Draw(SpriteBatch);
+
             _deck.DrawDeck(SpriteBatch, _backGround.DeckFieldPos);
             _deck.DrawHand(SpriteBatch);
             _deck.DrawDiscard(SpriteBatch);

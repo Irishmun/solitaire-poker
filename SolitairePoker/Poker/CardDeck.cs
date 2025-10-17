@@ -225,6 +225,7 @@ namespace SolitairePoker.Poker
                 _cardBack.LayerDepth = 1f - (((float)height - i) / (float)height);
                 _cardBack.Draw(batch, pos);
                 pos.Y--;
+                pos.X++;
             }
 
             //cycle through cards
