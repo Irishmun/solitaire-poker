@@ -17,10 +17,11 @@ namespace SolitairePoker.Poker
 
         private List<Card> _deck;
         private List<Card> _hand;
+        private List<Card> _markedForDiscard;
         private List<Card> _discard;
         private Sprite _cardBack;
         private Sprite _slideCard;
-        private float _backT = 0;
+        private float _backT = 0, _discardT = 0;
         private float _slideTime = .5f;
         Random rng;
 
@@ -31,15 +32,34 @@ namespace SolitairePoker.Poker
             _cardBack = cardBack;
             _slideCard = cardBack;
             _hand = new List<Card>(MAX_HAND_SIZE);
+            _markedForDiscard = new List<Card>(cards.Length);
         }
 
         public void Update(GameTime time)
         {
+            float delta = (float)time.ElapsedGameTime.TotalSeconds;
+            if (_markedForDiscard.Count > 0)
+            {
+                if (_discardT < _slideTime)
+                {
+                    _discardT += delta;
+                    for (int i = 0; i < _markedForDiscard.Count; i++)
+                    {
+                        Card c = _markedForDiscard[i];
+                        c.Sprite.Position = Vector2.Lerp(c.Sprite.Position, Board.DISCARD_POS, _discardT / _slideTime);
+                    }
+                }
+                if (_discardT >= _slideTime)
+                {
+                    DiscardCards(_markedForDiscard.ToArray());
+                    _discardT = 0;
+                }
+            }
             if (_hand.Count < MAX_HAND_SIZE && _deck.Count > 0)
             {
                 if (_backT < _slideTime)
                 {
-                    _backT += (float)time.ElapsedGameTime.TotalSeconds;
+                    _backT += delta;
                     _slideCard.Position = Vector2.Lerp(Board.DECK_POS, new Vector2(Board.HAND_CENTER.X, Board.DECK_POS.Y), EasingUtil.EaseInQuad(_backT / _slideTime));
                 }
                 else
@@ -117,35 +137,52 @@ namespace SolitairePoker.Poker
 
         public bool DiscardCard(Card card)
         {
-            if (!_hand.Contains(card))
+            if (!_markedForDiscard.Contains(card))
             {
                 return false;
             }
             AddToDiscard(card);
-            _hand.Remove(card);
+            _markedForDiscard.Remove(card);
             return true;
         }
         public bool DiscardCards(Card[] cards)
         {
-            int oldCount = _hand.Count;
+            int oldCount = _markedForDiscard.Count;
 
             for (int i = 0; i < cards.Length; i++)
             {
-                if (!_hand.Contains(cards[i]))
+                if (!_markedForDiscard.Contains(cards[i]))
                 {
                     System.Diagnostics.Debug.WriteLine($"Couldn't discard {cards[i]}");
                     continue;
                 }
                 AddToDiscard(cards[i]);
-                _hand.Remove(cards[i]);
+                _markedForDiscard.Remove(cards[i]);
             }
 
-            if (_hand.Count == oldCount)
+            if (_markedForDiscard.Count == oldCount)
             {
                 return false;
             }
 
             return true;
+        }
+
+        public void MarkForDiscard(Card card)
+        {
+            _markedForDiscard.Add(card);
+            _hand.Remove(card);
+        }
+
+        public void MarkForDiscard(Card[] cards)
+        {
+            _markedForDiscard.AddRange(cards);
+            for (int i = 0; i < cards.Length; i++)
+            {
+                if (!_hand.Contains(cards[i]))
+                { continue; }
+                _hand.Remove(cards[i]);
+            }
         }
 
         private void AddToDiscard(Card card)
@@ -261,6 +298,11 @@ namespace SolitairePoker.Poker
             {
                 _discard[i].Sprite.Draw(spriteBatch, _discard[i].Sprite.Position, ((float)i) / (float)_discard.Count);
             }
+            for (int i = 0; i < _markedForDiscard.Count; i++)
+            {
+                _markedForDiscard[i].Sprite.Draw(spriteBatch, _markedForDiscard[i].Sprite.Position, ((float)i) / (float)_markedForDiscard.Count);
+
+            }
         }
 
         private void SetCardPositions(Vector2 handFieldCenter)
@@ -292,6 +334,10 @@ namespace SolitairePoker.Poker
                     _hand[3].Sprite.Position = handFieldCenter + new Vector2(_hand[3].Sprite.Width + 4, 0);
                     _hand[4].Sprite.Position = handFieldCenter + new Vector2(_hand[4].Sprite.Width * 2 + 8, 0);
                     break;
+                case 6:
+                    break;
+                case 7:
+                    break;
                 default:
                     break;
             }
@@ -301,5 +347,6 @@ namespace SolitairePoker.Poker
 
         public Card[] GetHand() => _hand.ToArray();
         public Card[] GetSelectedCards() => _hand.Where(x => x.Selected == true).ToArray();
+        public int DeckCount => _deck.Count;
     }
 }

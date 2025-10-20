@@ -35,7 +35,7 @@ namespace SolitairePoker.UI
                 logic.ApplyScore(scoredHand);
             }
 
-            deck.DiscardCards(selected);
+            deck.MarkForDiscard(selected);
         }
     }
 }

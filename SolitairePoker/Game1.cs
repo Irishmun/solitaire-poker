@@ -3,12 +3,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameLibrary;
 using MonoGameLibrary.Graphics;
-using SolitairePoker.Poker;
-using System.Diagnostics;
-using SolitairePoker.UI;
 using MonoGameLibrary.Input;
+using SolitairePoker.Poker;
+using SolitairePoker.UI;
 using System;
-using System.Linq;
+using System.Diagnostics;
 
 namespace SolitairePoker
 {
@@ -26,7 +25,7 @@ namespace SolitairePoker
 
         private MenuBar _menuBar;
         private SpriteFont _font;
-        private TextSprite _message, _totalScore, _scoredHistory, _handHistory, _fps;
+        private TextSprite _message, _totalScore, _scoredHistory, _handHistory, _deckCount;// _fps;
 
         public Game1() : base("Solitaire Poker", 640, 480, false)
         {
@@ -54,37 +53,29 @@ namespace SolitairePoker
 
         protected override void LoadContent()
         {
+            // TODO: use this.Content to load your game content here
             _font = Content.Load<SpriteFont>("Font");
             _message = new TextSprite(_font, true, new Vector2(2, 2));
             _message.Position = new Vector2(8, 28);
-            _message.Alpha = 4;
 
-            _fps = new TextSprite(_font, false);
+
+            /*_fps = new TextSprite(_font, false);
             _fps.Position = new Vector2(8, 28);
-            _fps.Text = "0 FPS";
+            _fps.Text = "0 FPS";*/
 
             _totalScore = new TextSprite(_font, false);
             _totalScore.Position = new Vector2(438, 231);
-            _totalScore.Text = string.Empty;
             _scoredHistory = new TextSprite(_font, false);
             _scoredHistory.Position = new Vector2(580, 54);
-            _scoredHistory.Text = string.Empty;
             _handHistory = new TextSprite(_font, false);
             _handHistory.Position = new Vector2(341, 54);
-            _handHistory.Text = string.Empty;
+            _deckCount = new TextSprite(_font, false);
+            _deckCount.Position = new Vector2(530, 460);
 
-            // TODO: use this.Content to load your game content here
             _menuBar.AddDecksToDropDown(_deckLoader.GetAllDeckNames(Content));
-            //if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/Bicycle/Bicycle.dck", out _deck))
-            //if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/Kenney/Kenney.dck", out _deck))
-            //if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/TF2/tf2.dck", out _deck))
-            if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/Inventory/inventory.dck", out _deck))
-            {
-                System.Diagnostics.Debug.WriteLine($"Loaded deck \"{_deckLoader.LoadedDeckName}\"...");
-                _message.Text = $"Loaded Deck \"{_deckLoader.LoadedDeckName}\"...";
-                _deck.ShuffleDeck((int)DateTime.Now.Ticks);
-                //_deck.AddCardsToHand(_deck.PickupCards(5));
-            }
+
+            StartGame("Inventory/inventory.dck");
+
             _backGround.LoadBoard();
 
             _menuBar.TSMI_CloseGame.Click += TSMI_CloseGame_Click;
@@ -93,17 +84,29 @@ namespace SolitairePoker
             base.LoadContent();
         }
 
+        private void StartGame(string deckName)
+        {
+            _totalScore.Text = string.Empty;
+            _scoredHistory.Text = string.Empty;
+            _handHistory.Text = string.Empty;
+
+            if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/" + deckName, out _deck))
+            {
+                _message.Alpha = 4;
+                System.Diagnostics.Debug.WriteLine($"Loaded deck \"{_deckLoader.LoadedDeckName}\"...");
+                _message.Text = $"Loaded Deck \"{_deckLoader.LoadedDeckName}\"...";
+                _deck.ShuffleDeck((int)DateTime.Now.Ticks);
+                //_deck.AddCardsToHand(_deck.PickupCards(5));
+                _deckCount.Text = string.Format("{0}/{1}", _deck.DeckCount, CardDeck.MAX_DECK_SIZE);
+            }
+        }
+
         private void TSMI_ChooseDeck_DropDownItemClicked(object sender, System.Windows.Forms.ToolStripItemClickedEventArgs e)
         {
             if (e.ClickedItem == null)
             { return; }
             Debug.WriteLine(e.ClickedItem);
-            if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/" + e.ClickedItem, out _deck))
-            {
-                _deck.ShuffleDeck((int)DateTime.Now.Ticks);
-                _message.Text = $"Loaded Deck \"{_deckLoader.LoadedDeckName}\"...";
-                _message.Alpha = 4;
-            }
+            StartGame(e.ClickedItem.ToString());
         }
 
         private void TSMI_CloseGame_Click(object sender, EventArgs e)
@@ -125,14 +128,16 @@ namespace SolitairePoker
             if (gameTime.ElapsedGameTime.Milliseconds > 0)
             {
                 _message.Alpha -= (float)gameTime.ElapsedGameTime.TotalSeconds * 2f;
-                _fps.Text = string.Format("{0} FPS", Math.Round((1f / ((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f)),0,MidpointRounding.AwayFromZero));
+                //_fps.Text = string.Format("{0} FPS", Math.Round((1f / ((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f)), 0, MidpointRounding.AwayFromZero));
+                //_fps.Position = new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth - _font.MeasureString(_fps.Text).X - 8, 28);
             }
+            _deckCount.Text = string.Format("{0}/{1}", _deck.DeckCount, CardDeck.MAX_DECK_SIZE);
+            _deckCount.Position = new Vector2(616 - _font.MeasureString(_deckCount.Text).X, 460);
 
             _totalScore.Text = ScoreBoard.TotalScore.ToString();
             _totalScore.Position = new Vector2(438 - _font.MeasureString(_totalScore.Text).X, 231);
             _handHistory.Text = ScoreBoard.GetFormattedHandHistory();
             _scoredHistory.Text = ScoreBoard.GetFormattedScoreHistory();
-            _fps.Position = new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth - _font.MeasureString(_fps.Text).X - 8, 28);
 
             base.Update(gameTime);
         }
@@ -153,7 +158,8 @@ namespace SolitairePoker
             _totalScore.Draw(SpriteBatch);
             _scoredHistory.Draw(SpriteBatch);
             _handHistory.Draw(SpriteBatch);
-            _fps.Draw(SpriteBatch);
+            _deckCount.Draw(SpriteBatch);
+            //_fps.Draw(SpriteBatch);
 
             _deck.DrawDeck(SpriteBatch, _backGround.DeckFieldPos);
             _deck.DrawHand(SpriteBatch);
@@ -210,5 +216,7 @@ namespace SolitairePoker
                 button?.ClickHandButton(_deck, _pokerLogic);
             }
         }
+
+
     }
 }
