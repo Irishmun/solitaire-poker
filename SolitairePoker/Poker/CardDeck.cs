@@ -11,7 +11,8 @@ namespace SolitairePoker.Poker
 {
     public class CardDeck
     {
-        private const int MAX_HAND_SIZE = 5;
+        private const int MAX_HAND_SIZE = 7;
+        private const int MAX_SELECT_SIZE = 5;
         public const int MAX_DECK_SIZE = 52;//TODO: place this in a logic zone instead
         public const int MAX_DECK_HEIGHT = 10;
 
@@ -23,6 +24,7 @@ namespace SolitairePoker.Poker
         private Sprite _slideCard;
         private float _backT = 0, _discardT = 0;
         private float _slideTime = .5f;
+        private int _selectedCount = 0;
         Random rng;
 
         public void SetDeck(Card[] cards, Sprite cardBack)
@@ -202,21 +204,31 @@ namespace SolitairePoker.Poker
             { return; }
 
             Card selected = _hand[cardIndex];
-
+            bool select = false;
 
             if (forceUnselect || selected.Selected == true)
             {
-                selected.Selected = false;
+                select = false;
+                _selectedCount -= 1;
+                if (_selectedCount < 0)
+                {
+                    _selectedCount = 0;
+                }
             }
             else
             {
-                selected.Selected = true;
+                select = true;
+                if (_selectedCount >= MAX_SELECT_SIZE)
+                { return; }
+                _selectedCount += 1;
             }
+            selected.Selected = select;
+
             System.Diagnostics.Debug.WriteLine($"Select card: {selected}, {selected.Selected}");
 
             Vector2 pos = selected.Sprite.Position;
             pos.Y = Board.HAND_CENTER.Y;
-            if (selected.Selected)
+            if (select)
             {
                 pos.Y -= 32;
                 selected.Sprite.Position = pos;
@@ -245,7 +257,7 @@ namespace SolitairePoker.Poker
             //}
             //_deck.CardBackTex.Draw(SpriteBatch, pos);
 
-            _slideCard.Draw(batch, _slideCard.Position);
+            _slideCard.Draw(batch, _slideCard.Position, 1f);
 
             Vector2 pos = startPos;// _backGround.DeckFieldPos;
             int height = _deck.Count > MAX_DECK_HEIGHT ? MAX_DECK_HEIGHT : _deck.Count;
@@ -307,42 +319,18 @@ namespace SolitairePoker.Poker
 
         private void SetCardPositions(Vector2 handFieldCenter)
         {
-            switch (_hand.Count)
+            //https://gamedev.stackexchange.com/a/203507
+            if (_hand.Count > 0)
             {
-                case 1:
-                    _hand[0].Sprite.Position = handFieldCenter;
-                    break;
-                case 2:
-                    _hand[0].Sprite.Position = handFieldCenter - new Vector2(_hand[0].Sprite.Width * 0.5f + 4, 0);
-                    _hand[1].Sprite.Position = handFieldCenter + new Vector2(_hand[1].Sprite.Width * 0.5f + 4, 0);
-                    break;
-                case 3:
-                    _hand[0].Sprite.Position = handFieldCenter - new Vector2(_hand[0].Sprite.Width + 8, 0);
-                    _hand[1].Sprite.Position = handFieldCenter;
-                    _hand[2].Sprite.Position = handFieldCenter + new Vector2(_hand[2].Sprite.Width + 8, 0);
-                    break;
-                case 4:
-                    _hand[0].Sprite.Position = handFieldCenter - new Vector2(_hand[0].Sprite.Width * 1.5f + 4, 0);
-                    _hand[1].Sprite.Position = handFieldCenter - new Vector2(_hand[1].Sprite.Width * 0.5f + 2, 0);
-                    _hand[2].Sprite.Position = handFieldCenter + new Vector2(_hand[2].Sprite.Width * 0.5f + 2, 0);
-                    _hand[3].Sprite.Position = handFieldCenter + new Vector2(_hand[3].Sprite.Width * 1.5f + 4, 0);
-                    break;
-                case 5:
-                    _hand[0].Sprite.Position = handFieldCenter - new Vector2(_hand[0].Sprite.Width * 2 + 8, 0);
-                    _hand[1].Sprite.Position = handFieldCenter - new Vector2(_hand[2].Sprite.Width + 4, 0);
-                    _hand[2].Sprite.Position = handFieldCenter;
-                    _hand[3].Sprite.Position = handFieldCenter + new Vector2(_hand[3].Sprite.Width + 4, 0);
-                    _hand[4].Sprite.Position = handFieldCenter + new Vector2(_hand[4].Sprite.Width * 2 + 8, 0);
-                    break;
-                case 6:
-                    break;
-                case 7:
-                    break;
-                default:
-                    break;
+                for (int i = 0; i < _hand.Count; i++)
+                {
+                    float depth = (i + 0.5f) / (float)_hand.Count;
+                    float xPos = float.Lerp(Board.HAND_CENTER.X - 216, Board.HAND_CENTER.X + 216, depth);
+                    Vector2 pos = new Vector2(xPos, Board.HAND_CENTER.Y);
+                    _hand[i].Sprite.Position = pos;
+                    _hand[i].Sprite.LayerDepth = depth;
+                }
             }
-
-
         }
 
         public Card[] GetHand() => _hand.ToArray();
