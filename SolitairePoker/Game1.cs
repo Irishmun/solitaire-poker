@@ -188,16 +188,23 @@ namespace SolitairePoker
 
                 if (hand != null && hand.Length > 0)
                 {
+                    int index = -1;
                     for (int i = 0; i < hand.Length; i++)
                     {
                         if (hand[i].Sprite.ContainsPoint(_input.Mouse.Position))
                         {
-                            Debug.WriteLine("picked the {0} of {1}s", hand[i].Face, hand[i].Suit);
-                            _deck.SelectCard(i, false);
-                            //click card
-                            break;
+                            //Debug.WriteLine("picked the {0} of {1}s", hand[i].Face, hand[i].Suit);
+                            if (index == -1 || hand[i].Sprite.LayerDepth > hand[index].Sprite.LayerDepth)
+                            {
+                                index = i;
+                            }
                         }
                     }
+                    if (index >= 0)
+                    {
+                        _deck.SelectCard(index, false);
+                    }
+
                 }
                 /*else if (_backGround.IsPointInDeckField(_input.Mouse.Position))
                 {

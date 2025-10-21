@@ -325,7 +325,7 @@ namespace SolitairePoker.Poker
                 for (int i = 0; i < _hand.Count; i++)
                 {
                     float depth = (i + 0.5f) / (float)_hand.Count;
-                    float xPos = float.Lerp(Board.HAND_CENTER.X - 216, Board.HAND_CENTER.X + 216, depth);
+                    float xPos = float.Lerp(Board.HAND_CENTER.X - Board.HAND_WIDTH, Board.HAND_CENTER.X + Board.HAND_WIDTH, depth);
                     Vector2 pos = new Vector2(xPos, Board.HAND_CENTER.Y);
                     _hand[i].Sprite.Position = pos;
                     _hand[i].Sprite.LayerDepth = depth;

@@ -7,8 +7,8 @@ namespace SolitairePoker.UI
 {
     public class Board
     {
-        private const int MAX_HAND_CARDS = 5;
-        public static readonly Vector2 HAND_CENTER = new Vector2(253, 391);//width 456
+        public static readonly int HAND_WIDTH = 208;//width 456
+        public static readonly Vector2 HAND_CENTER = new Vector2(253, 391);
         public static readonly Vector2 DECK_POS = new Vector2(529, 332);
         public static readonly Vector2 DISCARD_POS = new Vector2(89, 146);
 
