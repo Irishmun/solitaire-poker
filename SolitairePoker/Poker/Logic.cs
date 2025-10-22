@@ -59,7 +59,6 @@ namespace SolitairePoker.Poker
         /// <returns><see cref="string.Empty"/> if invalid hand. hand name if valid</returns>
         public string EvaluateHand(Card[] hand)
         {
-
             if (hand.Length == 0) //<= 1)
             {
                 return string.Empty;
@@ -68,12 +67,16 @@ namespace SolitairePoker.Poker
             int same4 = GetXSame(4, hand);
             int same3 = GetXSame(3, hand);
             int same2 = GetXSame(2, hand);
-            int straight = GetStraight(hand);
+            int straight = GetStraight(hand, out bool royal);
             int flush = GetFlush(hand);
             int high = GetHighCard(hand);
 
             if (flush > 0 && straight > 0)
             {
+                if (royal)
+                {
+                    return "Royal Flush";
+                }
                 return "Straight Flush";
             }
 
@@ -166,7 +169,7 @@ namespace SolitairePoker.Poker
             return ret.Count;
         }
 
-        private int GetStraight(Card[] hand)
+        private int GetStraight(Card[] hand, out bool isRoyal)
         {
             /*
              * int straightLength
@@ -188,8 +191,8 @@ namespace SolitairePoker.Poker
              *  return 1
              * return 0
              */
+            isRoyal = false;
             int straightLength = 1;
-            bool kingAce;
             if (hand.Length < 5)
             { return 0; }//straight needs 5 cards, assumes there can be no more than 5 cards in a (played) hand
 
@@ -197,14 +200,14 @@ namespace SolitairePoker.Poker
             Array.Sort(sortedHand, new Comparison<Card>((x, y) => Compare((byte)x.Face, (byte)y.Face)));
 
             Card lowest = sortedHand[0];
-            kingAce = sortedHand[sortedHand.Length - 1].Face == FaceEnum.FACE_KING && lowest.Face == FaceEnum.FACE_ACE;
+            isRoyal = sortedHand[sortedHand.Length - 1].Face == FaceEnum.FACE_KING && lowest.Face == FaceEnum.FACE_ACE;
 
-            if (kingAce)
+            if (isRoyal)
             {
                 lowest = sortedHand[1];
             }
 
-            for (int i = kingAce ? 2 : 1; i < sortedHand.Length; i++)
+            for (int i = isRoyal ? 2 : 1; i < sortedHand.Length; i++)
             {
                 FaceEnum nextFace = (FaceEnum)((byte)lowest.Face + (byte)1);
                 if (nextFace != sortedHand[i].Face)
@@ -215,7 +218,7 @@ namespace SolitairePoker.Poker
                 straightLength++;
             }
 
-            if (straightLength == 4 && kingAce)
+            if (straightLength == 4 && isRoyal)
             {//in case Ace is past King (10,J,Q,K,A)
                 straightLength = 5;
             }

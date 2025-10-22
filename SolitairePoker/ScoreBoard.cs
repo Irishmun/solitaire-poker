@@ -24,7 +24,7 @@ namespace SolitairePoker
             }
             _scoreHistory.Add(score);
             _handHistory.Add(name);
-                             
+
         }
 
         public static string GetFormattedHandHistory()
@@ -35,6 +35,13 @@ namespace SolitairePoker
         public static string GetFormattedScoreHistory()
         {
             return string.Join('\n', _scoreHistory);
+        }
+
+        public static void ResetScore()
+        {
+            _scoreHistory.Clear();
+            _handHistory.Clear();
+            _totalScore = 0;
         }
 
         public static int TotalScore { get => _totalScore; set => _totalScore = value; }
