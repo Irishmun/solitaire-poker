@@ -8,12 +8,14 @@ using SolitairePoker.Poker;
 using SolitairePoker.UI;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace SolitairePoker
 {
     public class Game1 : Core
     {
         private bool _clearScreen = true;
+        private bool _messageBoxVisible = false;
 
         private InputManager _input;
         private Logic _pokerLogic;
@@ -86,43 +88,37 @@ namespace SolitairePoker
 
         private void StartGame(string deckName)
         {
+            ScoreBoard.ResetScore();
             _totalScore.Text = string.Empty;
             _scoredHistory.Text = string.Empty;
             _handHistory.Text = string.Empty;
 
-            if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/" + deckName, out _deck))
+            if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/" + deckName, out CardDeck newDeck))
             {
+                _deck = newDeck;
                 _message.Alpha = 4;
                 System.Diagnostics.Debug.WriteLine($"Loaded deck \"{_deckLoader.LoadedDeckName}\"...");
                 _message.Text = $"Loaded Deck \"{_deckLoader.LoadedDeckName}\"...";
-                _deck.ShuffleDeck((int)DateTime.Now.Ticks);
                 //_deck.AddCardsToHand(_deck.PickupCards(5));
-                _deckCount.Text = string.Format("{0}/{1}", _deck.DeckCount, CardDeck.MAX_DECK_SIZE);
             }
-        }
-
-        private void TSMI_ChooseDeck_DropDownItemClicked(object sender, System.Windows.Forms.ToolStripItemClickedEventArgs e)
-        {
-            if (e.ClickedItem == null)
-            { return; }
-            Debug.WriteLine(e.ClickedItem);
-            StartGame(e.ClickedItem.ToString());
-        }
-
-        private void TSMI_CloseGame_Click(object sender, EventArgs e)
-        {
-            Exit();
+            else if (_deck != null)
+            {
+                _deck.EverythingBackToDeck();
+            }
+            _deck.ShuffleDeck((int)DateTime.Now.Ticks);
+            _deckCount.Text = string.Format("{0}/{1}", _deck.DeckCount, CardDeck.MAX_DECK_SIZE);
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
             // TODO: Add your update logic here
-
             _input.Update(gameTime);
             HandleKeyboardInputs();
             HandleMouseInputs();
+            if (_deck == null)
+            {
+                return;
+            }
             _deck.Update(gameTime);
 
             if (gameTime.ElapsedGameTime.Milliseconds > 0)
@@ -131,13 +127,37 @@ namespace SolitairePoker
                 //_fps.Text = string.Format("{0} FPS", Math.Round((1f / ((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f)), 0, MidpointRounding.AwayFromZero));
                 //_fps.Position = new Vector2(GraphicsDevice.PresentationParameters.BackBufferWidth - _font.MeasureString(_fps.Text).X - 8, 28);
             }
-            _deckCount.Text = string.Format("{0}/{1}", _deck.DeckCount, CardDeck.MAX_DECK_SIZE);
+            string count = _deck.DeckCount < 0 ? "-" : _deck.DeckCount.ToString();
+            _deckCount.Text = string.Format("{0}/{1}", count, CardDeck.MAX_DECK_SIZE);
             _deckCount.Position = new Vector2(616 - _font.MeasureString(_deckCount.Text).X, 460);
 
             _totalScore.Text = ScoreBoard.TotalScore.ToString();
             _totalScore.Position = new Vector2(438 - _font.MeasureString(_totalScore.Text).X, 231);
             _handHistory.Text = ScoreBoard.GetFormattedHandHistory();
             _scoredHistory.Text = ScoreBoard.GetFormattedScoreHistory();
+
+            if (_deck.DeckMarkedEmpty && !_messageBoxVisible)
+            {
+                string possibleMove = _pokerLogic.EvaluateHand(_deck.Hand);
+                if (string.IsNullOrWhiteSpace(possibleMove) || possibleMove.Equals("High Card"))
+                {
+                    Debug.WriteLine("showing messagebox");
+                    System.Windows.Forms.DialogResult res = System.Windows.Forms.MessageBox.Show("No more valid plays.\nFinal Score: " + ScoreBoard.TotalScore + " Chips\nStart a new game?", "Game Over!", System.Windows.Forms.MessageBoxButtons.YesNo);
+                    /*Task<int?> finishBox = MessageBox.Show("Game Over!", "No more valid plays.\nFinal Score: " + ScoreBoard.TotalScore + " Chips", new[] { "Exit", "New Game" });
+                    _messageBoxVisible = true;
+                    int? res = await finishBox;
+                    if (res == null || res == 1)*/
+                    if (res == System.Windows.Forms.DialogResult.Yes)
+                    {
+                        StartGame(_deckLoader.LoadedDeckName);
+                    }
+                    else
+                    {
+                        Exit();
+                    }
+                    _messageBoxVisible = false;
+                }
+            }
 
             base.Update(gameTime);
         }
@@ -146,7 +166,6 @@ namespace SolitairePoker
         {
             if (_clearScreen)
             {
-                //GraphicsDevice.Clear(Color.Purple);
                 GraphicsDevice.Clear(Color.Green);
             }
 
@@ -168,7 +187,6 @@ namespace SolitairePoker
             SpriteBatch.End();
             base.Draw(gameTime);
         }
-
 
         private void HandleKeyboardInputs()
         {
@@ -206,24 +224,26 @@ namespace SolitairePoker
                     }
 
                 }
-                /*else if (_backGround.IsPointInDeckField(_input.Mouse.Position))
-                {
-                    Card[] pickedUpCards = _deck.PickupCards(1);
-                    if (pickedUpCards != null)
-                    {
-                        _deck.AddCardsToHand(pickedUpCards);
-                    }
-                }*/
             }
             if (_input.Mouse.WasButtonJustReleased(MouseButton.Left))
             {
                 //get selected button, do that one
                 ButtonBase button = _backGround.TryGetSelectedButton(_input.Mouse.Position);
-                Debug.WriteLine($"Selected button: " + button);
                 button?.ClickHandButton(_deck, _pokerLogic);
             }
         }
 
 
+        private void TSMI_ChooseDeck_DropDownItemClicked(object sender, System.Windows.Forms.ToolStripItemClickedEventArgs e)
+        {
+            if (e.ClickedItem == null)
+            { return; }
+            StartGame(e.ClickedItem.ToString());
+        }
+
+        private void TSMI_CloseGame_Click(object sender, EventArgs e)
+        {
+            Exit();
+        }
     }
 }

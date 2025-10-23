@@ -11,7 +11,7 @@ namespace SolitairePoker.Poker
 {
     public class CardDeck
     {
-        private const int MAX_HAND_SIZE = 7;
+        public const int MAX_HAND_SIZE = 7;
         private const int MAX_SELECT_SIZE = 5;
         public const int MAX_DECK_SIZE = 52;//TODO: place this in a logic zone instead
         public const int MAX_DECK_HEIGHT = 10;
@@ -23,8 +23,9 @@ namespace SolitairePoker.Poker
         private Sprite _cardBack;
         private Sprite _slideCard;
         private float _backT = 0, _discardT = 0;
-        private float _slideTime = .5f;
+        private float _slideTime = 0.25f;//.5f;
         private int _selectedCount = 0;
+        private bool _deckMarkedEmpty = false;
         Random rng;
 
         public void SetDeck(Card[] cards, Sprite cardBack)
@@ -40,7 +41,7 @@ namespace SolitairePoker.Poker
         public void Update(GameTime time)
         {
             float delta = (float)time.ElapsedGameTime.TotalSeconds;
-            if (_markedForDiscard.Count > 0)
+            if (_markedForDiscard != null && _markedForDiscard.Count > 0)
             {
                 if (_discardT < _slideTime)
                 {
@@ -57,7 +58,7 @@ namespace SolitairePoker.Poker
                     _discardT = 0;
                 }
             }
-            if (_hand.Count < MAX_HAND_SIZE && _deck.Count > 0)
+            if (_hand != null && _deck != null && _hand.Count < MAX_HAND_SIZE && _deck.Count > 0)
             {
                 if (_backT < _slideTime)
                 {
@@ -79,6 +80,21 @@ namespace SolitairePoker.Poker
             else
             {
                 _slideCard.Position = new Vector2(-200, -200);
+            }
+            _deckMarkedEmpty = (_deck.Count <= 0) && (_markedForDiscard.Count <= 0);
+        }
+
+        public void EverythingBackToDeck()
+        {
+            _deck.AddRange(_hand);
+            _deck.AddRange(_discard);
+            _deck.AddRange(_markedForDiscard);
+            _hand.Clear();
+            _discard.Clear();
+            _markedForDiscard.Clear();
+            foreach (Card card in _deck)
+            {
+                card.Sprite.Rotation = 0;
             }
         }
 
@@ -224,7 +240,7 @@ namespace SolitairePoker.Poker
             }
             selected.Selected = select;
 
-            System.Diagnostics.Debug.WriteLine($"Select card: {selected}, {selected.Selected}");
+            //System.Diagnostics.Debug.WriteLine($"Select card: {selected}, {selected.Selected}");
 
             Vector2 pos = selected.Sprite.Position;
             pos.Y = Board.HAND_CENTER.Y;
@@ -242,21 +258,6 @@ namespace SolitairePoker.Poker
 
         public void DrawDeck(SpriteBatch batch, Vector2 startPos)
         {
-            //spread out cards
-            //Vector2 pos = Vector2.Zero;
-            //for (int i = 0; i < _deck.LoadedCards.Length; i++)
-            //{
-            //    if (pos.X + _deck.LoadedCards[i].Texture.Width > Graphics.PreferredBackBufferWidth)
-            //    {
-            //        pos.X = 0;
-            //        pos.Y += _deck.LoadedCards[i].Texture.Height;
-            //    }
-            //    _deck.LoadedCards[i].Texture.Draw(SpriteBatch, pos);
-            //
-            //    pos.X += _deck.LoadedCards[i].Texture.Width;
-            //}
-            //_deck.CardBackTex.Draw(SpriteBatch, pos);
-
             _slideCard.Draw(batch, _slideCard.Position, 1f);
 
             Vector2 pos = startPos;// _backGround.DeckFieldPos;
@@ -276,28 +277,10 @@ namespace SolitairePoker.Poker
                 pos.Y--;
                 pos.X++;
             }
-
-            //cycle through cards
-            //Texture2D toDraw;
-            //if (cardIndex >= _deck.LoadedCards.Length)
-            //{
-            //    toDraw = _deck.CardBackTex;
-            //    cardIndex = 0;
-            //}
-            //else
-            //{
-            //    toDraw = _deck.LoadedCards[cardIndex].Texture;
-            //}
-            //SpriteBatch.Draw(toDraw, new Vector2((Graphics.PreferredBackBufferWidth - 64) * 0.5f, (Graphics.PreferredBackBufferHeight - 64)) * 0.5f, Color.White);
-            //cardIndex += 1;
         }
 
         internal void DrawHand(SpriteBatch spriteBatch)
         {
-            if (_hand.Count == 0)
-            {
-                return;
-            }
 
             for (int i = 0; i < _hand.Count; i++)
             {
@@ -333,8 +316,32 @@ namespace SolitairePoker.Poker
             }
         }
 
-        public Card[] GetHand() => _hand.ToArray();
+        public Card[] GetHand()
+        {
+            if (_hand == null)
+            {
+                return new Card[0];
+            }
+            return _hand.ToArray();
+        }
+
         public Card[] GetSelectedCards() => _hand.Where(x => x.Selected == true).ToArray();
-        public int DeckCount => _deck.Count;
+
+        public int DeckCount
+        {
+            get
+            {
+                if (_deck == null)
+                {
+                    return -1;
+                }
+                return _deck.Count;
+            }
+        }
+
+        public int HandSize => _hand.Count;
+        public Card[] Hand => _hand.ToArray();
+
+        public bool DeckMarkedEmpty { get => _deckMarkedEmpty; set => _deckMarkedEmpty = value; }
     }
 }
