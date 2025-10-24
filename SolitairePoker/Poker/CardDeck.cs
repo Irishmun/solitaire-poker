@@ -43,6 +43,7 @@ namespace SolitairePoker.Poker
 
         public void Update(GameTime time)
         {
+            _deckMarkedEmpty = (_deck.Count <= 0) && (_markedForDiscard.Count <= 0);
             float delta = (float)time.ElapsedGameTime.TotalSeconds;
             if (_markedForDiscard != null && _markedForDiscard.Count > 0)
             {
@@ -96,7 +97,7 @@ namespace SolitairePoker.Poker
             {
                 _slideCard.Position = new Vector2(-200, -200);
             }
-            _deckMarkedEmpty = (_deck.Count <= 0) && (_markedForDiscard.Count <= 0);
+            
         }
 
         public void EverythingBackToDeck()

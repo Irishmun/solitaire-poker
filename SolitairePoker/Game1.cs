@@ -36,8 +36,8 @@ namespace SolitairePoker
             System.Windows.Forms.Control ctrl = System.Windows.Forms.Control.FromHandle(hWnd);
             System.Windows.Forms.Form form = ctrl.FindForm();
             _menuBar = new MenuBar(form);
-            IsFixedTimeStep = false;
-            Graphics.SynchronizeWithVerticalRetrace = false;
+            /*IsFixedTimeStep = false;
+            Graphics.SynchronizeWithVerticalRetrace = false;*/
             //form.TransparencyKey = System.Drawing.Color.Magenta;
 
         }
