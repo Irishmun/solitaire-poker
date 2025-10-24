@@ -13,6 +13,60 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin audio/CARD_MOVE_1.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/CARD_MOVE_1.mp3
+
+#begin audio/CARD_MOVE_2.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/CARD_MOVE_2.mp3
+
+#begin audio/CARD_MOVE_3.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/CARD_MOVE_3.mp3
+
+#begin audio/CARD_MOVE_4.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/CARD_MOVE_4.mp3
+
+#begin audio/CARD_MOVE_5.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/CARD_MOVE_5.mp3
+
+#begin audio/Cards_Shuffle_1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/Cards_Shuffle_1.wav
+
+#begin audio/Cards_Shuffle_2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/Cards_Shuffle_2.wav
+
+#begin audio/Cards_Shuffle_3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/Cards_Shuffle_3.wav
+
+#begin audio/Cards_Shuffle_4.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/Cards_Shuffle_4.wav
+
 #begin Decks/Bicycle/bicycle.dck
 /copy:Decks/Bicycle/bicycle.dck
 

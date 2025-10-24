@@ -24,6 +24,7 @@ namespace SolitairePoker
         private DeckLoader _deckLoader;
         private CardDeck _deck;
         private Board _backGround;
+        private Audio _audio;
 
         private MenuBar _menuBar;
         private SpriteFont _font;
@@ -45,6 +46,7 @@ namespace SolitairePoker
         {
             //Add your initialization logic here
             _menuBar.Initialize();
+            _audio = new Audio();
             _input = new InputManager();
             _deckLoader = new DeckLoader();
             _backGround = new Board();
@@ -56,6 +58,7 @@ namespace SolitairePoker
         protected override void LoadContent()
         {
             // TODO: use this.Content to load your game content here
+            _audio.LoadContent();
             _font = Content.Load<SpriteFont>("Font");
             _message = new TextSprite(_font, true, new Vector2(2, 2));
             _message.Position = new Vector2(8, 28);
@@ -96,6 +99,7 @@ namespace SolitairePoker
             if (_deckLoader.LoadDeckIntoMemory(Content, "Decks/" + deckName, out CardDeck newDeck))
             {
                 _deck = newDeck;
+                _deck.Audio = _audio;
                 _message.Alpha = 4;
                 System.Diagnostics.Debug.WriteLine($"Loaded deck \"{_deckLoader.LoadedDeckName}\"...");
                 _message.Text = $"Loaded Deck \"{_deckLoader.LoadedDeckName}\"...";
@@ -105,6 +109,7 @@ namespace SolitairePoker
             {
                 _deck.EverythingBackToDeck();
             }
+            _audio.PlayShuffleSound();
             _deck.ShuffleDeck((int)DateTime.Now.Ticks);
             _deckCount.Text = string.Format("{0}/{1}", _deck.DeckCount, CardDeck.MAX_DECK_SIZE);
         }
