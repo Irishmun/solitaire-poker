@@ -85,9 +85,12 @@ namespace SolitairePoker
 
             _menuBar.TSMI_CloseGame.Click += TSMI_CloseGame_Click;
             _menuBar.TSMI_ChooseDeck.DropDownItemClicked += TSMI_ChooseDeck_DropDownItemClicked;
+            _menuBar.TSMB_ToggleMute.CheckedChanged += TSMB_ToggleMute_CheckedChanged;
 
             base.LoadContent();
         }
+
+
 
         private void StartGame(string deckName)
         {
@@ -249,6 +252,11 @@ namespace SolitairePoker
         private void TSMI_CloseGame_Click(object sender, EventArgs e)
         {
             Exit();
+        }
+
+        private void TSMB_ToggleMute_CheckedChanged(object sender, EventArgs e)
+        {
+            _audio.IsMuted = _menuBar.TSMB_ToggleMute.Checked;
         }
     }
 }

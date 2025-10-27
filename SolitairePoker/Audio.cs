@@ -15,6 +15,9 @@ namespace SolitairePoker
 
         private Random _rng;
 
+        private bool _isMuted = false;
+
+
         public void LoadContent()
         {
             _rng = new Random((int)DateTime.Now.Ticks);
@@ -57,12 +60,17 @@ namespace SolitairePoker
 
         public void PlayShuffleSound()
         {
+            if (_isMuted)
+            { return; }
             _shuffleEffects[_rng.Next(_shuffleEffects.Length)].Play();
         }
 
         public void PlayDrawSound()
         {
+            if (_isMuted)
+            { return; }
             _drawEffects[_rng.Next(_drawEffects.Length)].Play();
         }
+        public bool IsMuted { get => _isMuted; set => _isMuted = value; }
     }
 }

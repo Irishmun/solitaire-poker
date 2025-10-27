@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace SolitairePoker.UI
 {
@@ -20,9 +15,15 @@ namespace SolitairePoker.UI
             MenuStrip strip = new MenuStrip();
             ToolStripMenuItem fileStrip = new ToolStripMenuItem("File");
             TSMI_CloseGame = new ToolStripMenuItem("Exit.");
-            fileStrip.DropDownItems.Add(TSMI_CloseGame);
             TSMI_ChooseDeck = new ToolStripMenuItem("Decks");
+            TSMB_ToggleMute = new ToolStripButton("Mute Audio");
+            ToolStripSeparator sep = new ToolStripSeparator();
+            TSMB_ToggleMute.CheckOnClick = true;
+            TSMB_ToggleMute.Width = 64;
 
+            fileStrip.DropDownItems.Add(TSMB_ToggleMute);
+            fileStrip.DropDownItems.Add(sep);
+            fileStrip.DropDownItems.Add(TSMI_CloseGame);
             strip.Items.Add(fileStrip);
             strip.Items.Add(TSMI_ChooseDeck);
             _form.MainMenuStrip = strip;
@@ -39,5 +40,6 @@ namespace SolitairePoker.UI
 
         public ToolStripMenuItem TSMI_CloseGame { get; set; }
         public ToolStripMenuItem TSMI_ChooseDeck { get; set; }
+        public ToolStripButton TSMB_ToggleMute { get; set; }
     }
 }
