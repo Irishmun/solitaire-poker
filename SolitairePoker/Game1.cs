@@ -30,12 +30,14 @@ namespace SolitairePoker
         private SpriteFont _font;
         private TextSprite _message, _totalScore, _scoredHistory, _handHistory, _deckCount;// _fps;
 
+        private System.Windows.Forms.Form _form;
+        GameOverScreen gos = new GameOverScreen();
         public Game1() : base("Solitaire Poker", 640, 480, false)
         {
             IntPtr hWnd = Window.Handle;
             System.Windows.Forms.Control ctrl = System.Windows.Forms.Control.FromHandle(hWnd);
-            System.Windows.Forms.Form form = ctrl.FindForm();
-            _menuBar = new MenuBar(form);
+            _form = ctrl.FindForm();
+            _menuBar = new MenuBar(_form);
             /*IsFixedTimeStep = false;
             Graphics.SynchronizeWithVerticalRetrace = false;*/
             //form.TransparencyKey = System.Drawing.Color.Magenta;
@@ -150,12 +152,15 @@ namespace SolitairePoker
                 if (string.IsNullOrWhiteSpace(possibleMove) || possibleMove.Equals("High Card"))
                 {
                     Debug.WriteLine("showing messagebox");
+
+                    //System.Windows.Forms.DialogResult res = gos.ShowDialog(_form);// System.Windows.Forms.MessageBox.Show("No more valid plays.\nFinal Score: " + ScoreBoard.TotalScore + " Chips\nStart a new game?", "Game Over!", System.Windows.Forms.MessageBoxButtons.YesNo);
                     System.Windows.Forms.DialogResult res = System.Windows.Forms.MessageBox.Show("No more valid plays.\nFinal Score: " + ScoreBoard.TotalScore + " Chips\nStart a new game?", "Game Over!", System.Windows.Forms.MessageBoxButtons.YesNo);
                     /*Task<int?> finishBox = MessageBox.Show("Game Over!", "No more valid plays.\nFinal Score: " + ScoreBoard.TotalScore + " Chips", new[] { "Exit", "New Game" });
                     _messageBoxVisible = true;
                     int? res = await finishBox;
                     if (res == null || res == 1)*/
                     if (res == System.Windows.Forms.DialogResult.Yes)
+                    //if (res == System.Windows.Forms.DialogResult.Yes)//TODO: fix issue where this gets repeatedly
                     {
                         StartGame(_deckLoader.LoadedDeckName);
                     }
