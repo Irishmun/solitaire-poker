@@ -23,7 +23,6 @@ namespace SolitairePoker
             }
             _scoreHistory.Add(score);
             _handHistory.Add(name);
-
         }
 
         public static string GetFormattedHandHistory()

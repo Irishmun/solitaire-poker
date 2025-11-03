@@ -146,7 +146,9 @@
             MinimizeBox = false;
             Name = "GameOverScreen";
             SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             Text = "GameOverScreen";
+            Load += GameOverScreen_Load;
             ResumeLayout(false);
             PerformLayout();
         }

@@ -15,7 +15,6 @@ namespace SolitairePoker
     public class Game1 : Core
     {
         private bool _clearScreen = true;
-        private bool _messageBoxVisible = false;
 
         private InputManager _input;
         private Logic _pokerLogic;
@@ -41,7 +40,6 @@ namespace SolitairePoker
             /*IsFixedTimeStep = false;
             Graphics.SynchronizeWithVerticalRetrace = false;*/
             //form.TransparencyKey = System.Drawing.Color.Magenta;
-
         }
 
         protected override void Initialize()
@@ -146,29 +144,28 @@ namespace SolitairePoker
             _handHistory.Text = ScoreBoard.GetFormattedHandHistory();
             _scoredHistory.Text = ScoreBoard.GetFormattedScoreHistory();
 
-            if (_deck.DeckMarkedEmpty && !_messageBoxVisible)
+            if (_deck.DeckMarkedEmpty)
             {
                 string possibleMove = _pokerLogic.EvaluateHand(_deck.Hand);
                 if (string.IsNullOrWhiteSpace(possibleMove) || possibleMove.Equals("High Card"))
                 {
-                    Debug.WriteLine("showing messagebox");
-
-                    //System.Windows.Forms.DialogResult res = gos.ShowDialog(_form);// System.Windows.Forms.MessageBox.Show("No more valid plays.\nFinal Score: " + ScoreBoard.TotalScore + " Chips\nStart a new game?", "Game Over!", System.Windows.Forms.MessageBoxButtons.YesNo);
-                    System.Windows.Forms.DialogResult res = System.Windows.Forms.MessageBox.Show("No more valid plays.\nFinal Score: " + ScoreBoard.TotalScore + " Chips\nStart a new game?", "Game Over!", System.Windows.Forms.MessageBoxButtons.YesNo);
-                    /*Task<int?> finishBox = MessageBox.Show("Game Over!", "No more valid plays.\nFinal Score: " + ScoreBoard.TotalScore + " Chips", new[] { "Exit", "New Game" });
-                    _messageBoxVisible = true;
-                    int? res = await finishBox;
-                    if (res == null || res == 1)*/
+                    System.Windows.Forms.DialogResult res = System.Windows.Forms.DialogResult.None;
+                    if (!gos.Visible)
+                    {
+                        ScoreBoard.WriteScoreToFile();
+                        Debug.WriteLine("showing messagebox");
+                        res = gos.ShowDialog(_form);// System.Windows.Forms.MessageBox.Show("No more valid plays.\nFinal Score: " + ScoreBoard.TotalScore + " Chips\nStart a new game?", "Game Over!", System.Windows.Forms.MessageBoxButtons.YesNo);
+                        //res = System.Windows.Forms.MessageBox.Show("No more valid plays.\nFinal Score: " + ScoreBoard.TotalScore + " Chips\nStart a new game?", "Game Over!", System.Windows.Forms.MessageBoxButtons.YesNo);
+                    }
                     if (res == System.Windows.Forms.DialogResult.Yes)
                     //if (res == System.Windows.Forms.DialogResult.Yes)//TODO: fix issue where this gets repeatedly
                     {
                         StartGame(_deckLoader.LoadedDeckName);
                     }
-                    else
+                    else if (res != System.Windows.Forms.DialogResult.Yes && res != System.Windows.Forms.DialogResult.None)
                     {
                         Exit();
                     }
-                    _messageBoxVisible = false;
                 }
             }
 
